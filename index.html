@@ -400,14 +400,256 @@
       <div class="section-header">
         <div>
           <h2>2. Producto escalar</h2>
-          <p>Definición geométrica, componentes, ortogonalidad, ángulo y proyección.</p>
+          <p>Definición geométrica, componentes, signo, ortogonalidad, ángulo, proyección y aplicaciones.</p>
         </div>
-        <span class="badge pending">Próxima etapa</span>
+        <span class="badge">Sección desarrollada</span>
       </div>
-      <div class="placeholder">
-        <h3>Sección preparada</h3>
-        <p>En la siguiente versión agregaremos teoría, 10 actividades, 10 preguntas y gráficas de producto escalar y proyección.</p>
-      </div>
+
+      <nav class="inner-tabs">
+        <button class="inner-tab active" data-panel="s2-theory">Teoría</button>
+        <button class="inner-tab" data-panel="s2-activities">Actividades</button>
+        <button class="inner-tab" data-panel="s2-quiz">Autoevaluación</button>
+      </nav>
+
+      <article id="s2-theory" class="panel active">
+        <div class="theory-grid">
+          <div class="theory-card">
+            <h3>Definición geométrica</h3>
+            <p>
+              El producto escalar entre dos vectores es una operación que devuelve un número real.
+              Si θ es el ángulo entre 𝐮 y 𝐯, se define:
+            </p>
+            <div class="formula">𝐮 · 𝐯 = ‖𝐮‖ ‖𝐯‖ cos(θ)</div>
+            <p>
+              Esta expresión permite relacionar el valor del producto escalar con la orientación relativa
+              de los vectores.
+            </p>
+          </div>
+
+          <div class="theory-card">
+            <h3>Producto escalar por componentes</h3>
+            <p>
+              En coordenadas cartesianas, el producto escalar se calcula multiplicando componentes homónimas
+              y sumando los resultados.
+            </p>
+            <div class="formula">𝐮 · 𝐯 = u₁v₁ + u₂v₂</div>
+            <div class="formula">𝐮 · 𝐯 = u₁v₁ + u₂v₂ + u₃v₃</div>
+          </div>
+
+          <div class="theory-card">
+            <h3>Signo y ortogonalidad</h3>
+            <ul>
+              <li>Si θ es agudo, entonces 𝐮 · 𝐯 &gt; 0.</li>
+              <li>Si θ es recto, entonces 𝐮 · 𝐯 = 0.</li>
+              <li>Si θ es obtuso, entonces 𝐮 · 𝐯 &lt; 0.</li>
+            </ul>
+            <div class="formula">𝐮 ⟂ 𝐯 ⇔ 𝐮 · 𝐯 = 0</div>
+          </div>
+
+          <div class="theory-card">
+            <h3>Ángulo y proyección</h3>
+            <p>El ángulo entre dos vectores no nulos se obtiene de:</p>
+            <div class="formula">cos(θ) = (𝐮 · 𝐯) / (‖𝐮‖ ‖𝐯‖)</div>
+            <p>La proyección de 𝐯 sobre 𝐮 es:</p>
+            <div class="formula">proy<sub>𝐮</sub>(𝐯) = ((𝐮 · 𝐯) / ‖𝐮‖²) 𝐮</div>
+          </div>
+        </div>
+
+        <div class="graph-stack">
+          <h3>Gráficas interactivas de producto escalar</h3>
+          <p class="muted">Mové los vectores para observar cómo cambian el ángulo, el signo y la proyección.</p>
+
+          <div class="graph-card">
+            <div class="graph-header">
+              <div>
+                <h4>Gráfica 4 · Ángulo y signo de 𝐮 · 𝐯</h4>
+                <p>Relaciona θ, cos(θ) y el signo del producto escalar.</p>
+              </div>
+              <div class="live-values">
+                <span>𝐮 = (<b id="g4u1">4</b>, <b id="g4u2">1</b>)</span>
+                <span>𝐯 = (<b id="g4v1">2</b>, <b id="g4v2">3</b>)</span>
+                <span>𝐮 · 𝐯 = <b id="g4dot">11</b></span>
+                <span>θ = <b id="g4angle">35.5°</b></span>
+                <span id="g4sign">Producto positivo</span>
+              </div>
+            </div>
+            <canvas id="graphDot" width="880" height="520"></canvas>
+          </div>
+
+          <div class="graph-card">
+            <div class="graph-header">
+              <div>
+                <h4>Gráfica 5 · Proyección ortogonal</h4>
+                <p>Muestra proy<sub>𝐮</sub>(𝐯), la recta soporte de 𝐮 y la perpendicular desde 𝐯.</p>
+              </div>
+              <div class="live-values">
+                <span>proy<sub>𝐮</sub>(𝐯) = (<b id="g5p1">—</b>, <b id="g5p2">—</b>)</span>
+                <span>componente = <b id="g5comp">—</b></span>
+              </div>
+            </div>
+            <canvas id="graphProjection" width="880" height="520"></canvas>
+          </div>
+        </div>
+      </article>
+
+      <article id="s2-activities" class="panel">
+        <div class="section-note">
+          <h3>Actividades guiadas</h3>
+          <p>Resolvé las actividades. Los campos indican el formato esperado, no la respuesta.</p>
+        </div>
+
+        <div class="activity-list">
+          <div class="activity-card" data-answer="positivo">
+            <h4>Actividad 1 · Signo del producto escalar</h4>
+            <p>Si el ángulo entre 𝐮 y 𝐯 es agudo, ¿el producto 𝐮·𝐯 es positivo, negativo o cero?</p>
+            <input type="text" placeholder="positivo / negativo / cero">
+            <div class="buttons"><button class="check-btn">Verificar</button><button class="hint-btn">Pista</button><button class="solution-btn">Ver resolución</button></div>
+            <p class="feedback"></p>
+            <div class="solution">Si θ es agudo, cos(θ)&gt;0, por lo tanto 𝐮·𝐯 es positivo.</div>
+          </div>
+
+          <div class="activity-card" data-answer="12">
+            <h4>Actividad 2 · Producto escalar en ℝ²</h4>
+            <p>Sean 𝐮=(3,-1) y 𝐯=(5,3). Calculá 𝐮·𝐯.</p>
+            <input type="text" placeholder="Ingresá un número">
+            <div class="buttons"><button class="check-btn">Verificar</button><button class="hint-btn">Pista</button><button class="solution-btn">Ver resolución</button></div>
+            <p class="feedback"></p>
+            <div class="solution">𝐮·𝐯 = 3·5 + (-1)·3 = 15 - 3 = 12.</div>
+          </div>
+
+          <div class="activity-card" data-answer="5">
+            <h4>Actividad 3 · Producto escalar en ℝ³</h4>
+            <p>Sean 𝐮=(1,2,3) y 𝐯=(4,-1,1). Calculá 𝐮·𝐯.</p>
+            <input type="text" placeholder="Ingresá un número">
+            <div class="buttons"><button class="check-btn">Verificar</button><button class="hint-btn">Pista</button><button class="solution-btn">Ver resolución</button></div>
+            <p class="feedback"></p>
+            <div class="solution">𝐮·𝐯 = 1·4 + 2·(-1) + 3·1 = 4 - 2 + 3 = 5.</div>
+          </div>
+
+          <div class="activity-card" data-answer="0">
+            <h4>Actividad 4 · Ortogonalidad</h4>
+            <p>Sean 𝐮=(3,2) y 𝐯=(-4,6). Calculá 𝐮·𝐯 para verificar si son ortogonales.</p>
+            <input type="text" placeholder="Ingresá un número">
+            <div class="buttons"><button class="check-btn">Verificar</button><button class="hint-btn">Pista</button><button class="solution-btn">Ver resolución</button></div>
+            <p class="feedback"></p>
+            <div class="solution">𝐮·𝐯 = 3·(-4)+2·6 = -12+12 = 0. Son ortogonales.</div>
+          </div>
+
+          <div class="activity-card" data-answer="(-2,3)">
+            <h4>Actividad 5 · Hallar un vector ortogonal</h4>
+            <p>Un vector ortogonal a 𝐮=(3,2) puede ser:</p>
+            <input type="text" placeholder="Formato: (a,b)">
+            <div class="buttons"><button class="check-btn">Verificar</button><button class="hint-btn">Pista</button><button class="solution-btn">Ver resolución</button></div>
+            <p class="feedback"></p>
+            <div class="solution">Un ejemplo es 𝐯=(-2,3), porque 3·(-2)+2·3=0.</div>
+          </div>
+
+          <div class="activity-card" data-answer="90|90°">
+            <h4>Actividad 6 · Ángulo entre vectores</h4>
+            <p>Si 𝐮·𝐯=0 y ambos vectores son no nulos, ¿cuánto mide el ángulo entre ellos?</p>
+            <input type="text" placeholder="Ingresá el ángulo">
+            <div class="buttons"><button class="check-btn">Verificar</button><button class="hint-btn">Pista</button><button class="solution-btn">Ver resolución</button></div>
+            <p class="feedback"></p>
+            <div class="solution">Si 𝐮·𝐯=0, entonces cos(θ)=0. Por lo tanto θ=90°.</div>
+          </div>
+
+          <div class="activity-card" data-answer="(4,0)">
+            <h4>Actividad 7 · Proyección ortogonal</h4>
+            <p>Sean 𝐮=(2,0) y 𝐯=(4,3). Calculá proy<sub>𝐮</sub>(𝐯).</p>
+            <input type="text" placeholder="Formato: (a,b)">
+            <div class="buttons"><button class="check-btn">Verificar</button><button class="hint-btn">Pista</button><button class="solution-btn">Ver resolución</button></div>
+            <p class="feedback"></p>
+            <div class="solution">𝐮·𝐯=8 y ‖𝐮‖²=4. Entonces proy<sub>𝐮</sub>(𝐯)=(8/4)𝐮=2(2,0)=(4,0).</div>
+          </div>
+
+          <div class="activity-card" data-answer="4">
+            <h4>Actividad 8 · Componente escalar</h4>
+            <p>Sean 𝐮=(2,0) y 𝐯=(4,3). Calculá comp<sub>𝐮</sub>(𝐯).</p>
+            <input type="text" placeholder="Ingresá un número">
+            <div class="buttons"><button class="check-btn">Verificar</button><button class="hint-btn">Pista</button><button class="solution-btn">Ver resolución</button></div>
+            <p class="feedback"></p>
+            <div class="solution">comp<sub>𝐮</sub>(𝐯)=(𝐮·𝐯)/‖𝐮‖ = 8/2 = 4.</div>
+          </div>
+
+          <div class="activity-card" data-answer="12">
+            <h4>Actividad 9 · Trabajo mecánico</h4>
+            <p>Una fuerza 𝐅=(3,0) produce un desplazamiento 𝐝=(4,2). Calculá W=𝐅·𝐝.</p>
+            <input type="text" placeholder="Ingresá un número">
+            <div class="buttons"><button class="check-btn">Verificar</button><button class="hint-btn">Pista</button><button class="solution-btn">Ver resolución</button></div>
+            <p class="feedback"></p>
+            <div class="solution">W=𝐅·𝐝 = 3·4 + 0·2 = 12.</div>
+          </div>
+
+          <div class="activity-card" data-answer="19">
+            <h4>Actividad 10 · Potencia</h4>
+            <p>Dadas 𝐅=(5,1,0) y 𝐯=(3,4,0), calculá P=𝐅·𝐯.</p>
+            <input type="text" placeholder="Ingresá un número">
+            <div class="buttons"><button class="check-btn">Verificar</button><button class="hint-btn">Pista</button><button class="solution-btn">Ver resolución</button></div>
+            <p class="feedback"></p>
+            <div class="solution">P=𝐅·𝐯 = 5·3 + 1·4 + 0·0 = 19.</div>
+          </div>
+        </div>
+      </article>
+
+      <article id="s2-quiz" class="panel">
+        <div class="section-note">
+          <h3>Autoevaluación</h3>
+          <p>Respondé las 10 preguntas de producto escalar.</p>
+        </div>
+
+        <div class="quiz-grid">
+          <div class="quiz-card" data-correct="0">
+            <h4>1. El producto escalar de dos vectores da como resultado:</h4>
+            <button>Un escalar</button><button>Un vector</button><button>Una matriz</button>
+            <p class="quiz-feedback"></p>
+          </div>
+          <div class="quiz-card" data-correct="1">
+            <h4>2. Si 𝐮·𝐯=0, entonces 𝐮 y 𝐯 son:</h4>
+            <button>Paralelos</button><button>Ortogonales</button><button>Iguales</button>
+            <p class="quiz-feedback"></p>
+          </div>
+          <div class="quiz-card" data-correct="0">
+            <h4>3. Si θ es agudo, entonces 𝐮·𝐯 es:</h4>
+            <button>Positivo</button><button>Negativo</button><button>Cero</button>
+            <p class="quiz-feedback"></p>
+          </div>
+          <div class="quiz-card" data-correct="2">
+            <h4>4. Si θ es obtuso, entonces 𝐮·𝐯 es:</h4>
+            <button>Positivo</button><button>Cero</button><button>Negativo</button>
+            <p class="quiz-feedback"></p>
+          </div>
+          <div class="quiz-card" data-correct="0">
+            <h4>5. En ℝ³, 𝐮·𝐯 se calcula como:</h4>
+            <button>u₁v₁+u₂v₂+u₃v₃</button><button>u₁+v₁</button><button>u₁v₂-u₂v₁</button>
+            <p class="quiz-feedback"></p>
+          </div>
+          <div class="quiz-card" data-correct="1">
+            <h4>6. La proyección proy<sub>𝐮</sub>(𝐯) queda sobre la dirección de:</h4>
+            <button>𝐯</button><button>𝐮</button><button>𝐮+𝐯</button>
+            <p class="quiz-feedback"></p>
+          </div>
+          <div class="quiz-card" data-correct="0">
+            <h4>7. El trabajo mecánico puede expresarse como:</h4>
+            <button>W=𝐅·𝐝</button><button>W=𝐅×𝐝</button><button>W=𝐅+𝐝</button>
+            <p class="quiz-feedback"></p>
+          </div>
+          <div class="quiz-card" data-correct="2">
+            <h4>8. Si 𝐮 y 𝐯 son no nulos y forman 90°, entonces:</h4>
+            <button>𝐮·𝐯&gt;0</button><button>𝐮·𝐯&lt;0</button><button>𝐮·𝐯=0</button>
+            <p class="quiz-feedback"></p>
+          </div>
+          <div class="quiz-card" data-correct="0">
+            <h4>9. La fórmula geométrica del producto escalar es:</h4>
+            <button>𝐮·𝐯=‖𝐮‖‖𝐯‖cos(θ)</button><button>𝐮·𝐯=‖𝐮‖‖𝐯‖sen(θ)</button><button>𝐮·𝐯=𝐮×𝐯</button>
+            <p class="quiz-feedback"></p>
+          </div>
+          <div class="quiz-card" data-correct="1">
+            <h4>10. Para calcular el ángulo entre vectores se usa:</h4>
+            <button>sen(θ)</button><button>cos(θ)</button><button>tan(θ)</button>
+            <p class="quiz-feedback"></p>
+          </div>
+        </div>
+      </article>
     </section>
 
     <!-- SECCIÓN 3 -->

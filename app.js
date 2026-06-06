@@ -1,7 +1,9 @@
 const state = {
   g1: { u: { x: 4, y: 2 }, drag: null },
   g2: { u: { x: 3, y: 1 }, v: { x: 2, y: 3 }, drag: null },
-  g3: { u: { x: 4, y: 2 }, c: 1.5, drag: null }
+  g3: { u: { x: 4, y: 2 }, c: 1.5, drag: null },
+  g4: { u: { x: 4, y: 1 }, v: { x: 2, y: 3 }, drag: null },
+  g5: { u: { x: 4, y: 1 }, v: { x: 2, y: 3 }, drag: null }
 };
 
 const $ = (id) => document.getElementById(id);
@@ -21,6 +23,23 @@ function add(a, b) {
 
 function scale(a, c) {
   return { x: a.x * c, y: a.y * c };
+}
+
+function dot(a, b) {
+  return a.x * b.x + a.y * b.y;
+}
+
+function projection(v, u) {
+  const den = dot(u, u);
+  if (den === 0) return { x: 0, y: 0 };
+  return scale(u, dot(u, v) / den);
+}
+
+function angleBetween(a, b) {
+  const den = norm(a) * norm(b);
+  if (den === 0) return 0;
+  const c = Math.max(-1, Math.min(1, dot(a, b) / den));
+  return Math.acos(c) * 180 / Math.PI;
 }
 
 const view = { xmin: -6, xmax: 6, ymin: -6, ymax: 6, pad: 42 };
@@ -152,6 +171,69 @@ function drawHandle(ctx, canvas, p, color = "#111") {
   ctx.fill();
 }
 
+function drawSupportLine(ctx, canvas, u) {
+  const m = norm(u);
+  if (m === 0) return;
+  const d = { x: u.x / m, y: u.y / m };
+  const a = { x: -8 * d.x, y: -8 * d.y };
+  const b = { x: 8 * d.x, y: 8 * d.y };
+  const A = toCanvas(canvas, a);
+  const B = toCanvas(canvas, b);
+  ctx.strokeStyle = "#9ca3af";
+  ctx.lineWidth = 1.5;
+  ctx.setLineDash([6, 6]);
+  ctx.beginPath();
+  ctx.moveTo(A.x, A.y);
+  ctx.lineTo(B.x, B.y);
+  ctx.stroke();
+  ctx.setLineDash([]);
+}
+
+function drawAngleArc(ctx, canvas, u, v, radius = 58) {
+  const O = toCanvas(canvas, { x: 0, y: 0 });
+  const a1 = Math.atan2(u.y, u.x);
+  const a2 = Math.atan2(v.y, v.x);
+  let diff = a2 - a1;
+  while (diff <= -Math.PI) diff += 2 * Math.PI;
+  while (diff > Math.PI) diff -= 2 * Math.PI;
+
+  const start = -a1;
+  const end = -(a1 + diff);
+  const anticlockwise = diff > 0;
+
+  ctx.strokeStyle = "#b45309";
+  ctx.lineWidth = 2.5;
+  ctx.beginPath();
+  ctx.arc(O.x, O.y, radius, start, end, anticlockwise);
+  ctx.stroke();
+
+  const mid = a1 + diff / 2;
+  ctx.fillStyle = "#b45309";
+  ctx.font = "18px Georgia";
+  ctx.fillText("θ", O.x + (radius + 16) * Math.cos(mid), O.y - (radius + 12) * Math.sin(mid));
+}
+
+function drawRightAngleMarker(ctx, canvas, foot, u, size = 12) {
+  const m = norm(u);
+  if (m === 0) return;
+  const e1 = { x: u.x / m, y: u.y / m };
+  const e2 = { x: -e1.y, y: e1.x };
+  const s = size / 10;
+  const a = { x: foot.x + e1.x * s, y: foot.y + e1.y * s };
+  const b = { x: a.x + e2.x * s, y: a.y + e2.y * s };
+  const c = { x: foot.x + e2.x * s, y: foot.y + e2.y * s };
+  const A = toCanvas(canvas, a);
+  const B = toCanvas(canvas, b);
+  const C = toCanvas(canvas, c);
+  ctx.strokeStyle = "#777";
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(A.x, A.y);
+  ctx.lineTo(B.x, B.y);
+  ctx.lineTo(C.x, C.y);
+  ctx.stroke();
+}
+
 function drawDashedComponents(ctx, canvas, p) {
   const P = toCanvas(canvas, p);
   const Px = toCanvas(canvas, { x: p.x, y: 0 });
@@ -250,10 +332,82 @@ function drawScalarGraph() {
   $("g3cu2").textContent = fmt(cu.y);
 }
 
+function drawDotGraph() {
+  const canvas = $("graphDot");
+  if (!canvas) return;
+  const ctx = canvas.getContext("2d");
+  const u = state.g4.u;
+  const v = state.g4.v;
+  const d = dot(u, v);
+  const theta = angleBetween(u, v);
+
+  drawGrid(ctx, canvas);
+  drawArrow(ctx, canvas, { x: 0, y: 0 }, u, "#111", 3, "𝐮");
+  drawArrow(ctx, canvas, { x: 0, y: 0 }, v, "#334155", 3, "𝐯");
+  drawAngleArc(ctx, canvas, u, v, 58);
+  drawHandle(ctx, canvas, u, "#111");
+  drawHandle(ctx, canvas, v, "#334155");
+
+  $("g4u1").textContent = fmt(u.x);
+  $("g4u2").textContent = fmt(u.y);
+  $("g4v1").textContent = fmt(v.x);
+  $("g4v2").textContent = fmt(v.y);
+  $("g4dot").textContent = fmt(d);
+  $("g4angle").textContent = fmt(theta) + "°";
+
+  const sign = $("g4sign");
+  if (Math.abs(d) < 0.05) {
+    sign.textContent = "Producto nulo: vectores ortogonales";
+    sign.style.color = "var(--orange)";
+  } else if (d > 0) {
+    sign.textContent = "Producto positivo";
+    sign.style.color = "var(--green)";
+  } else {
+    sign.textContent = "Producto negativo";
+    sign.style.color = "var(--red)";
+  }
+}
+
+function drawProjectionGraph() {
+  const canvas = $("graphProjection");
+  if (!canvas) return;
+  const ctx = canvas.getContext("2d");
+  const u = state.g5.u;
+  const v = state.g5.v;
+  const p = projection(v, u);
+
+  drawGrid(ctx, canvas);
+  drawSupportLine(ctx, canvas, u);
+  drawArrow(ctx, canvas, { x: 0, y: 0 }, u, "#111", 3, "𝐮");
+  drawArrow(ctx, canvas, { x: 0, y: 0 }, v, "#334155", 3, "𝐯");
+  drawArrow(ctx, canvas, { x: 0, y: 0 }, p, "#0b5cad", 5, "proy");
+
+  const V = toCanvas(canvas, v);
+  const P = toCanvas(canvas, p);
+  ctx.strokeStyle = "#777";
+  ctx.setLineDash([7, 5]);
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(V.x, V.y);
+  ctx.lineTo(P.x, P.y);
+  ctx.stroke();
+  ctx.setLineDash([]);
+  drawRightAngleMarker(ctx, canvas, p, u, 12);
+
+  drawHandle(ctx, canvas, u, "#111");
+  drawHandle(ctx, canvas, v, "#334155");
+
+  $("g5p1").textContent = fmt(p.x);
+  $("g5p2").textContent = fmt(p.y);
+  $("g5comp").textContent = fmt(dot(u, v) / (norm(u) || 1));
+}
+
 function redrawAll() {
   drawVectorGraph();
   drawSumGraph();
   drawScalarGraph();
+  drawDotGraph();
+  drawProjectionGraph();
 }
 
 function pointerPosition(ev, canvas) {
@@ -313,12 +467,48 @@ function setupDragging() {
     state.g1.drag = null;
     state.g2.drag = null;
     state.g3.drag = null;
+    state.g4.drag = null;
+    state.g5.drag = null;
   });
 
   $("scalarSlider").addEventListener("input", (ev) => {
     state.g3.c = Number(ev.target.value);
     drawScalarGraph();
   });
+
+  const graphDot = $("graphDot");
+  if (graphDot) {
+    graphDot.addEventListener("pointerdown", (ev) => {
+      const p = pointerPosition(ev, graphDot);
+      if (nearPoint(graphDot, p, state.g4.u)) state.g4.drag = "u";
+      else if (nearPoint(graphDot, p, state.g4.v)) state.g4.drag = "v";
+    });
+    graphDot.addEventListener("pointermove", (ev) => {
+      if (!state.g4.drag) return;
+      const p = pointerPosition(ev, graphDot);
+      const val = clampPoint(fromCanvas(graphDot, p.x, p.y));
+      if (state.g4.drag === "u") state.g4.u = val;
+      if (state.g4.drag === "v") state.g4.v = val;
+      drawDotGraph();
+    });
+  }
+
+  const graphProjection = $("graphProjection");
+  if (graphProjection) {
+    graphProjection.addEventListener("pointerdown", (ev) => {
+      const p = pointerPosition(ev, graphProjection);
+      if (nearPoint(graphProjection, p, state.g5.u)) state.g5.drag = "u";
+      else if (nearPoint(graphProjection, p, state.g5.v)) state.g5.drag = "v";
+    });
+    graphProjection.addEventListener("pointermove", (ev) => {
+      if (!state.g5.drag) return;
+      const p = pointerPosition(ev, graphProjection);
+      const val = clampPoint(fromCanvas(graphProjection, p.x, p.y));
+      if (state.g5.drag === "u") state.g5.u = val;
+      if (state.g5.drag === "v") state.g5.v = val;
+      drawProjectionGraph();
+    });
+  }
 }
 
 function setupNavigation() {
