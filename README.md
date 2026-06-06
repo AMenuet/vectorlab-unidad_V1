@@ -39,3 +39,8 @@ Se corrigieron los campos de respuesta de las actividades para que no muestren e
 ## Nueva Base V3
 
 Se agregó la Sección 2 completa: teoría de producto escalar, dos gráficas interactivas, 10 actividades y 10 preguntas de autoevaluación.
+
+
+## Nueva Base V3.1
+
+Se agregó cache busting en los enlaces a `styles.css` y `app.js` para evitar que GitHub Pages o el navegador carguen versiones viejas de los archivos. Esto corrige casos donde la Sección 2 aparece pero sus gráficas no se dibujan.
