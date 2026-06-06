@@ -1,4 +1,4 @@
-# VectorLab · Unidad 1: Vectores · Nueva Base V1
+# VectorLab · Unidad 1: Vectores · Nueva Base V2
 
 Nueva versión limpia y estable de la app.
 
@@ -23,4 +23,9 @@ Nueva versión limpia y estable de la app.
 
 ## Próxima etapa
 
-Completar las 10 actividades y 10 preguntas de autoevaluación de la Sección 1.
+Próxima etapa: agregar la Sección 2 completa con producto escalar y gráficas interactivas.
+
+
+## Nueva Base V2
+
+Se completó la Sección 1 con 10 actividades guiadas y 10 preguntas de autoevaluación.

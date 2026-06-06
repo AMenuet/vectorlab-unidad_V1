@@ -344,16 +344,30 @@ function setupNavigation() {
   });
 }
 
+function normalizeAnswer(text) {
+  return String(text)
+    .toLowerCase()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+    .replace(/\s/g, "")
+    .replace(/;/g, ",")
+    .replace(/\[/g, "(")
+    .replace(/\]/g, ")")
+    .replace(/−/g, "-")
+    .replace(/𝐢/g, "i")
+    .replace(/𝐣/g, "j")
+    .replace(/𝐤/g, "k");
+}
+
 function setupActivities() {
   document.querySelectorAll(".activity-card").forEach(card => {
     const input = card.querySelector("input");
     const feedback = card.querySelector(".feedback");
     const solution = card.querySelector(".solution");
-    const answer = card.dataset.answer.toLowerCase().replace(/\s/g, "");
+    const answers = card.dataset.answer.split("|").map(normalizeAnswer);
 
     card.querySelector(".check-btn").addEventListener("click", () => {
-      const user = input.value.toLowerCase().replace(/\s/g, "");
-      if (user === answer) {
+      const user = normalizeAnswer(input.value);
+      if (answers.includes(user)) {
         feedback.textContent = "Correcto.";
         feedback.style.color = "var(--green)";
       } else {

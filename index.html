@@ -168,13 +168,13 @@
         <div class="section-note">
           <h3>Actividades guiadas</h3>
           <p>
-            En la próxima etapa cargaremos 10 actividades. Por ahora dejamos visible la estructura y tres actividades modelo.
+            Resolvé las actividades. Primero intentá responder; luego usá la pista o la resolución si lo necesitás.
           </p>
         </div>
 
         <div class="activity-list">
           <div class="activity-card" data-answer="vectorial">
-            <h4>Actividad modelo 1</h4>
+            <h4>Actividad 1 · Magnitud vectorial</h4>
             <p>Clasificá la magnitud <strong>fuerza</strong>: ¿es escalar o vectorial?</p>
             <input type="text" placeholder="Responder: escalar o vectorial">
             <div class="buttons">
@@ -186,9 +186,35 @@
             <div class="solution">La fuerza es vectorial porque requiere módulo, dirección y sentido.</div>
           </div>
 
+          <div class="activity-card" data-answer="sentido|modulodireccionsentido|modulo,direccion,sentido|modulo direccion sentido">
+            <h4>Actividad 2 · Elementos de un vector</h4>
+            <p>Completá los tres elementos que determinan un vector: módulo, dirección y ______.</p>
+            <input type="text" placeholder="Respuesta">
+            <div class="buttons">
+              <button class="check-btn">Verificar</button>
+              <button class="hint-btn">Pista</button>
+              <button class="solution-btn">Ver resolución</button>
+            </div>
+            <p class="feedback"></p>
+            <div class="solution">Un vector queda determinado por módulo, dirección y sentido.</div>
+          </div>
+
+          <div class="activity-card" data-answer="(4,2)">
+            <h4>Actividad 3 · Componentes en el plano</h4>
+            <p>Si el extremo de 𝐮 está en el punto (4,2) y parte del origen, escribí sus componentes.</p>
+            <input type="text" placeholder="Ej.: (4,2)">
+            <div class="buttons">
+              <button class="check-btn">Verificar</button>
+              <button class="hint-btn">Pista</button>
+              <button class="solution-btn">Ver resolución</button>
+            </div>
+            <p class="feedback"></p>
+            <div class="solution">Como el vector parte del origen y termina en (4,2), entonces 𝐮=(4,2).</div>
+          </div>
+
           <div class="activity-card" data-answer="5">
-            <h4>Actividad modelo 2</h4>
-            <p>Calculá el módulo de <span class="math">𝐮 = (3,4)</span>.</p>
+            <h4>Actividad 4 · Módulo en ℝ²</h4>
+            <p>Calculá el módulo de 𝐮 = (3,4).</p>
             <input type="text" placeholder="Ej.: 5">
             <div class="buttons">
               <button class="check-btn">Verificar</button>
@@ -199,9 +225,22 @@
             <div class="solution">‖𝐮‖ = √(3²+4²) = √25 = 5.</div>
           </div>
 
+          <div class="activity-card" data-answer="3">
+            <h4>Actividad 5 · Módulo en ℝ³</h4>
+            <p>Calculá el módulo de 𝐮 = (1,2,2).</p>
+            <input type="text" placeholder="Ej.: 3">
+            <div class="buttons">
+              <button class="check-btn">Verificar</button>
+              <button class="hint-btn">Pista</button>
+              <button class="solution-btn">Ver resolución</button>
+            </div>
+            <p class="feedback"></p>
+            <div class="solution">‖𝐮‖ = √(1²+2²+2²) = √9 = 3.</div>
+          </div>
+
           <div class="activity-card" data-answer="(5,-3,4)">
-            <h4>Actividad modelo 3</h4>
-            <p>Sean <span class="math">𝐮=(2,-1,0)</span> y <span class="math">𝐯=(3,-2,4)</span>. Calculá <span class="math">𝐮+𝐯</span>.</p>
+            <h4>Actividad 6 · Suma de vectores</h4>
+            <p>Sean 𝐮=(2,-1,0) y 𝐯=(3,-2,4). Calculá 𝐮+𝐯.</p>
             <input type="text" placeholder="Ej.: (5,-3,4)">
             <div class="buttons">
               <button class="check-btn">Verificar</button>
@@ -211,15 +250,65 @@
             <p class="feedback"></p>
             <div class="solution">𝐮+𝐯=(2+3,-1+(-2),0+4)=(5,-3,4).</div>
           </div>
+
+          <div class="activity-card" data-answer="(-1,1,-4)">
+            <h4>Actividad 7 · Resta de vectores</h4>
+            <p>Sean 𝐮=(2,-1,0) y 𝐯=(3,-2,4). Calculá 𝐮−𝐯.</p>
+            <input type="text" placeholder="Ej.: (-1,1,-4)">
+            <div class="buttons">
+              <button class="check-btn">Verificar</button>
+              <button class="hint-btn">Pista</button>
+              <button class="solution-btn">Ver resolución</button>
+            </div>
+            <p class="feedback"></p>
+            <div class="solution">𝐮−𝐯=(2-3,-1-(-2),0-4)=(-1,1,-4).</div>
+          </div>
+
+          <div class="activity-card" data-answer="(4,-2,0)">
+            <h4>Actividad 8 · Producto por escalar</h4>
+            <p>Sea 𝐮=(2,-1,0). Calculá 2𝐮.</p>
+            <input type="text" placeholder="Ej.: (4,-2,0)">
+            <div class="buttons">
+              <button class="check-btn">Verificar</button>
+              <button class="hint-btn">Pista</button>
+              <button class="solution-btn">Ver resolución</button>
+            </div>
+            <p class="feedback"></p>
+            <div class="solution">2𝐮 = 2(2,-1,0) = (4,-2,0).</div>
+          </div>
+
+          <div class="activity-card" data-answer="2i+4j-3k|2𝐢+4𝐣-3𝐤">
+            <h4>Actividad 9 · Descomposición canónica</h4>
+            <p>Escribí 𝐮=(2,4,-3) como combinación de 𝐢, 𝐣 y 𝐤.</p>
+            <input type="text" placeholder="Ej.: 2i+4j-3k">
+            <div class="buttons">
+              <button class="check-btn">Verificar</button>
+              <button class="hint-btn">Pista</button>
+              <button class="solution-btn">Ver resolución</button>
+            </div>
+            <p class="feedback"></p>
+            <div class="solution">𝐮 = 2𝐢 + 4𝐣 − 3𝐤.</div>
+          </div>
+
+          <div class="activity-card" data-answer="si|sí">
+            <h4>Actividad 10 · Paralelismo</h4>
+            <p>Sean 𝐮=(2,4) y 𝐯=(1,2). ¿Son paralelos? Respondé sí o no.</p>
+            <input type="text" placeholder="sí / no">
+            <div class="buttons">
+              <button class="check-btn">Verificar</button>
+              <button class="hint-btn">Pista</button>
+              <button class="solution-btn">Ver resolución</button>
+            </div>
+            <p class="feedback"></p>
+            <div class="solution">Sí. Se cumple 𝐮 = 2𝐯, por lo tanto son paralelos.</div>
+          </div>
         </div>
       </article>
 
       <article id="s1-quiz" class="panel">
         <div class="section-note">
           <h3>Autoevaluación</h3>
-          <p>
-            En la próxima etapa se completarán 10 preguntas. Por ahora dejamos tres preguntas de muestra.
-          </p>
+          <p>Respondé las 10 preguntas de la primera sección.</p>
         </div>
 
         <div class="quiz-grid">
@@ -232,10 +321,10 @@
           </div>
 
           <div class="quiz-card" data-correct="1">
-            <h4>2. Si c &lt; 0, entonces c𝐮...</h4>
-            <button>Conserva dirección y sentido</button>
-            <button>Conserva dirección e invierte sentido</button>
-            <button>Siempre vale cero</button>
+            <h4>2. Una temperatura de 25 °C es una magnitud...</h4>
+            <button>Vectorial</button>
+            <button>Escalar</button>
+            <button>Ambas</button>
             <p class="quiz-feedback"></p>
           </div>
 
@@ -244,6 +333,62 @@
             <button>(3,7)</button>
             <button>(2,12)</button>
             <button>(1,1)</button>
+            <p class="quiz-feedback"></p>
+          </div>
+
+          <div class="quiz-card" data-correct="1">
+            <h4>4. Si c &lt; 0, entonces c𝐮...</h4>
+            <button>Conserva dirección y sentido</button>
+            <button>Conserva dirección e invierte sentido</button>
+            <button>Siempre vale cero</button>
+            <p class="quiz-feedback"></p>
+          </div>
+
+          <div class="quiz-card" data-correct="0">
+            <h4>5. El módulo de 𝐮=(6,8) es:</h4>
+            <button>10</button>
+            <button>14</button>
+            <button>48</button>
+            <p class="quiz-feedback"></p>
+          </div>
+
+          <div class="quiz-card" data-correct="2">
+            <h4>6. El vector nulo tiene módulo:</h4>
+            <button>1</button>
+            <button>-1</button>
+            <button>0</button>
+            <p class="quiz-feedback"></p>
+          </div>
+
+          <div class="quiz-card" data-correct="0">
+            <h4>7. La descomposición canónica de 𝐮=(u₁,u₂,u₃) es:</h4>
+            <button>u₁𝐢 + u₂𝐣 + u₃𝐤</button>
+            <button>u₁𝐣 + u₂𝐢 + u₃𝐤</button>
+            <button>u₁ + u₂ + u₃</button>
+            <p class="quiz-feedback"></p>
+          </div>
+
+          <div class="quiz-card" data-correct="1">
+            <h4>8. Dos vectores paralelos tienen componentes...</h4>
+            <button>Siempre iguales</button>
+            <button>Proporcionales</button>
+            <button>Siempre nulas</button>
+            <p class="quiz-feedback"></p>
+          </div>
+
+          <div class="quiz-card" data-correct="0">
+            <h4>9. Si 𝐮=(3,0) y 𝐯=(0,3), entonces 𝐮+𝐯 es:</h4>
+            <button>(3,3)</button>
+            <button>(0,0)</button>
+            <button>(9,0)</button>
+            <p class="quiz-feedback"></p>
+          </div>
+
+          <div class="quiz-card" data-correct="2">
+            <h4>10. El vector unitario en la dirección de 𝐮 se obtiene haciendo:</h4>
+            <button>𝐮 · 𝐮</button>
+            <button>𝐮 + 𝐮</button>
+            <button>𝐮 / ‖𝐮‖</button>
             <p class="quiz-feedback"></p>
           </div>
         </div>
