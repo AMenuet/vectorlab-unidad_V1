@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>VectorLab · Unidad 1: Vectores</title>
   <meta name="description" content="Manual interactivo de vectores para Álgebra y Geometría Analítica." />
-  <link rel="stylesheet" href="styles.css?v=4" />
+  <link rel="stylesheet" href="styles.css?v=4_1" />
 </head>
 <body>
   <header class="hero">
@@ -720,7 +720,7 @@
             <div class="graph-header">
               <div>
                 <h4>Gráfica 6 · Producto vectorial en 3D</h4>
-                <p>Visualiza 𝐰 = 𝐮 × 𝐯 como vector perpendicular al plano.</p>
+                <p>Visualiza 𝐰 = 𝐮 × 𝐯 como vector perpendicular al plano. Podés arrastrar los extremos de 𝐮 y 𝐯.</p>
               </div>
               <div class="live-values">
                 <span>Orden: <b id="crossOrderLabel">𝐮 × 𝐯</b></span>
@@ -746,16 +746,23 @@
                   <path d="M0,0 L0,6 L8,3 z" fill="#b91c1c"></path>
                 </marker>
               </defs>
+
               <polygon id="crossPlane" points="110,315 570,285 655,130 195,160" fill="#e5e7eb" stroke="#64748b" stroke-width="2"/>
-              <circle cx="220" cy="288" r="7" fill="#111"/>
-              <line x1="220" y1="288" x2="560" y2="268" stroke="#111" stroke-width="4" marker-end="url(#arrBlackS3)"/>
-              <line x1="220" y1="288" x2="350" y2="162" stroke="#334155" stroke-width="4" marker-end="url(#arrBlackS3)"/>
+              <circle id="crossOrigin" cx="220" cy="288" r="7" fill="#111"/>
+
+              <line id="crossU" x1="220" y1="288" x2="560" y2="268" stroke="#111" stroke-width="4" marker-end="url(#arrBlackS3)"/>
+              <line id="crossV" x1="220" y1="288" x2="350" y2="162" stroke="#334155" stroke-width="4" marker-end="url(#arrBlackS3)"/>
               <line id="crossNormal" x1="220" y1="288" x2="220" y2="78" stroke="#0b5cad" stroke-width="5" marker-end="url(#arrBlueS3)"/>
-              <path d="M 292 284 A 74 74 0 0 0 272 235" fill="none" stroke="#111" stroke-width="2.5"/>
-              <text x="520" y="302" class="svg-label">𝐮</text>
-              <text x="360" y="162" class="svg-label">𝐯</text>
+
+              <path id="crossThetaArc" d="M 292 284 A 74 74 0 0 0 272 235" fill="none" stroke="#111" stroke-width="2.5"/>
+
+              <circle id="crossHandleU" cx="560" cy="268" r="11" fill="#111" opacity="0.9"/>
+              <circle id="crossHandleV" cx="350" cy="162" r="11" fill="#334155" opacity="0.95"/>
+
+              <text id="crossULabel" x="520" y="302" class="svg-label">𝐮</text>
+              <text id="crossVLabel" x="360" y="162" class="svg-label">𝐯</text>
               <text id="crossWLabel" x="245" y="98" class="svg-label blue">𝐰 = 𝐮 × 𝐯</text>
-              <text x="284" y="250" class="svg-small">θ</text>
+              <text id="crossThetaLabel" x="284" y="250" class="svg-small">θ</text>
             </svg>
           </div>
 
@@ -958,6 +965,6 @@
     <span>Diseño estable · Sin conversión automática de notación</span>
   </footer>
 
-  <script src="app.js?v=4"></script>
+  <script src="app.js?v=4_1"></script>
 </body>
 </html>

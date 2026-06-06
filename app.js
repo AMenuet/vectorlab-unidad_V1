@@ -5,7 +5,8 @@ const state = {
   g4: { u: { x: 4, y: 1 }, v: { x: 2, y: 3 }, drag: null },
   g5: { u: { x: 4, y: 1 }, v: { x: 2, y: 3 }, drag: null },
   g7: { u: { x: 4, y: 1 }, v: { x: 2, y: 3 }, drag: null },
-  cross: { order: "uxv", plane: true }
+  cross: { order: "uxv", plane: true },
+  crossGeom: { origin: { x: 220, y: 288 }, u: { x: 560, y: 268 }, v: { x: 350, y: 162 }, drag: null }
 };
 
 const $ = (id) => document.getElementById(id);
@@ -49,6 +50,33 @@ function angleBetween(a, b) {
 }
 
 const view = { xmin: -6, xmax: 6, ymin: -6, ymax: 6, pad: 42 };
+
+
+function svgPointerPosition(svg, ev) {
+  const rect = svg.getBoundingClientRect();
+  const vb = svg.viewBox.baseVal;
+  const sx = vb.width / rect.width;
+  const sy = vb.height / rect.height;
+  return {
+    x: (ev.clientX - rect.left) * sx,
+    y: (ev.clientY - rect.top) * sy
+  };
+}
+
+function clampSvgPoint(p) {
+  return {
+    x: Math.max(120, Math.min(650, p.x)),
+    y: Math.max(90, Math.min(360, p.y))
+  };
+}
+
+function dist(a, b) {
+  return Math.hypot(a.x - b.x, a.y - b.y);
+}
+
+function lineAngle(p) {
+  return Math.atan2(-(p.y), p.x);
+}
 
 function toCanvas(canvas, p) {
   const w = canvas.width - 2 * view.pad;
@@ -412,42 +440,90 @@ function setupCrossSvg() {
   const btnUxV = $("btnUxV");
   const btnVxU = $("btnVxU");
   const btnPlane = $("btnTogglePlane");
-  if (!btnUxV || !btnVxU || !btnPlane) return;
+  const svg = $("crossSvg");
+  if (!btnUxV || !btnVxU || !btnPlane || !svg) return;
 
   const update = () => {
+    const plane = $("crossPlane");
+    const origin = state.crossGeom.origin;
+    const u = state.crossGeom.u;
+    const v = state.crossGeom.v;
+    const sum = { x: u.x + v.x - origin.x, y: u.y + v.y - origin.y };
+    const w4 = { x: origin.x + sum.x, y: origin.y + sum.y };
+
+    // plane as parallelogram
+    plane.setAttribute("points", `${origin.x},${origin.y} ${u.x},${u.y} ${w4.x},${w4.y} ${v.x},${v.y}`);
+
+    // main vectors
+    $("crossOrigin").setAttribute("cx", origin.x);
+    $("crossOrigin").setAttribute("cy", origin.y);
+
+    $("crossU").setAttribute("x1", origin.x); $("crossU").setAttribute("y1", origin.y);
+    $("crossU").setAttribute("x2", u.x); $("crossU").setAttribute("y2", u.y);
+
+    $("crossV").setAttribute("x1", origin.x); $("crossV").setAttribute("y1", origin.y);
+    $("crossV").setAttribute("x2", v.x); $("crossV").setAttribute("y2", v.y);
+
+    $("crossHandleU").setAttribute("cx", u.x); $("crossHandleU").setAttribute("cy", u.y);
+    $("crossHandleV").setAttribute("cx", v.x); $("crossHandleV").setAttribute("cy", v.y);
+
+    $("crossULabel").setAttribute("x", u.x - 20);
+    $("crossULabel").setAttribute("y", u.y + 24);
+    $("crossVLabel").setAttribute("x", v.x + 12);
+    $("crossVLabel").setAttribute("y", v.y + 4);
+
+    // angle arc between u and v around origin
+    const ru = { x: u.x - origin.x, y: u.y - origin.y };
+    const rv = { x: v.x - origin.x, y: v.y - origin.y };
+    const a1 = Math.atan2(ru.y, ru.x);
+    const a2 = Math.atan2(rv.y, rv.x);
+    let diff = a2 - a1;
+    while (diff <= -Math.PI) diff += 2 * Math.PI;
+    while (diff > Math.PI) diff -= 2 * Math.PI;
+    const radius = 68;
+    const p1 = { x: origin.x + radius * Math.cos(a1), y: origin.y + radius * Math.sin(a1) };
+    const p2 = { x: origin.x + radius * Math.cos(a1 + diff), y: origin.y + radius * Math.sin(a1 + diff) };
+    const large = Math.abs(diff) > Math.PI ? 1 : 0;
+    const sweep = diff > 0 ? 1 : 0;
+    $("crossThetaArc").setAttribute("d", `M ${p1.x} ${p1.y} A ${radius} ${radius} 0 ${large} ${sweep} ${p2.x} ${p2.y}`);
+
+    const mid = a1 + diff / 2;
+    $("crossThetaLabel").setAttribute("x", origin.x + (radius + 18) * Math.cos(mid));
+    $("crossThetaLabel").setAttribute("y", origin.y + (radius + 10) * Math.sin(mid));
+
+    // normal direction
     const normal = $("crossNormal");
     const label = $("crossWLabel");
     const orderLabel = $("crossOrderLabel");
     const senseLabel = $("crossSenseLabel");
-    const plane = $("crossPlane");
+
+    normal.setAttribute("x1", origin.x);
+    normal.setAttribute("y1", origin.y);
 
     if (state.cross.order === "uxv") {
-      normal.setAttribute("x1", "220");
-      normal.setAttribute("y1", "288");
-      normal.setAttribute("x2", "220");
-      normal.setAttribute("y2", "78");
+      normal.setAttribute("x2", origin.x);
+      normal.setAttribute("y2", Math.max(40, origin.y - 210));
       normal.setAttribute("stroke", "#0b5cad");
       normal.setAttribute("marker-end", "url(#arrBlueS3)");
       label.textContent = "𝐰 = 𝐮 × 𝐯";
-      label.setAttribute("x", "245");
-      label.setAttribute("y", "98");
-      label.setAttribute("fill", "#0b5cad");
+      label.setAttribute("x", origin.x + 25);
+      label.setAttribute("y", Math.max(55, origin.y - 190));
+      label.setAttribute("class", "svg-label blue");
       orderLabel.textContent = "𝐮 × 𝐯";
       senseLabel.textContent = "positivo";
       senseLabel.style.color = "var(--green)";
       btnUxV.classList.add("active");
       btnVxU.classList.remove("active");
     } else {
-      normal.setAttribute("x1", "220");
-      normal.setAttribute("y1", "288");
-      normal.setAttribute("x2", "220");
-      normal.setAttribute("y2", "395");
+      normal.setAttribute("x2", origin.x);
+      normal.setAttribute("y2", Math.min(405, origin.y + 115));
       normal.setAttribute("stroke", "#b91c1c");
       normal.setAttribute("marker-end", "url(#arrRedS3)");
       label.textContent = "−𝐰 = 𝐯 × 𝐮";
-      label.setAttribute("x", "245");
-      label.setAttribute("y", "390");
-      label.setAttribute("fill", "#b91c1c");
+      label.setAttribute("x", origin.x + 25);
+      label.setAttribute("y", Math.min(395, origin.y + 105));
+      label.setAttribute("class", "svg-label");
+      label.style.fill = "#b91c1c";
       orderLabel.textContent = "𝐯 × 𝐮";
       senseLabel.textContent = "opuesto";
       senseLabel.style.color = "var(--red)";
@@ -457,6 +533,41 @@ function setupCrossSvg() {
 
     plane.style.display = state.cross.plane ? "block" : "none";
   };
+
+  const startDrag = (kind, ev) => {
+    ev.preventDefault();
+    state.crossGeom.drag = kind;
+    svg.classList.add("dragging");
+    if (svg.setPointerCapture) {
+      try { svg.setPointerCapture(ev.pointerId); } catch (e) {}
+    }
+  };
+
+  const stopDrag = (ev) => {
+    state.crossGeom.drag = null;
+    svg.classList.remove("dragging");
+    if (svg.releasePointerCapture && ev) {
+      try { svg.releasePointerCapture(ev.pointerId); } catch (e) {}
+    }
+  };
+
+  $("crossHandleU").addEventListener("pointerdown", (ev) => startDrag("u", ev));
+  $("crossHandleV").addEventListener("pointerdown", (ev) => startDrag("v", ev));
+
+  svg.addEventListener("pointermove", (ev) => {
+    if (!state.crossGeom.drag) return;
+    ev.preventDefault();
+    const p = clampSvgPoint(svgPointerPosition(svg, ev));
+    if (state.crossGeom.drag === "u") state.crossGeom.u = p;
+    if (state.crossGeom.drag === "v") state.crossGeom.v = p;
+    update();
+  });
+
+  svg.addEventListener("pointerup", stopDrag);
+  svg.addEventListener("pointercancel", stopDrag);
+  svg.addEventListener("pointerleave", (ev) => {
+    if (state.crossGeom.drag) stopDrag(ev);
+  });
 
   btnUxV.addEventListener("click", () => {
     state.cross.order = "uxv";

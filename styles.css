@@ -541,3 +541,20 @@ canvas.dragging {
   background: var(--blue2);
   color: white;
 }
+
+
+/* V4.1: interacción en gráfica conceptual de producto vectorial */
+#crossSvg {
+  touch-action: none;
+  user-select: none;
+}
+
+#crossHandleU,
+#crossHandleV {
+  cursor: grab;
+}
+
+#crossSvg.dragging #crossHandleU,
+#crossSvg.dragging #crossHandleV {
+  cursor: grabbing;
+}
