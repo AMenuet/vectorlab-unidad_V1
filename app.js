@@ -1,0 +1,410 @@
+const state = {
+  g1: { u: { x: 4, y: 2 }, drag: null },
+  g2: { u: { x: 3, y: 1 }, v: { x: 2, y: 3 }, drag: null },
+  g3: { u: { x: 4, y: 2 }, c: 1.5, drag: null }
+};
+
+const $ = (id) => document.getElementById(id);
+
+function fmt(n) {
+  const r = Math.round(n * 100) / 100;
+  return Number.isInteger(r) ? String(r) : r.toFixed(2);
+}
+
+function norm(v) {
+  return Math.hypot(v.x, v.y);
+}
+
+function add(a, b) {
+  return { x: a.x + b.x, y: a.y + b.y };
+}
+
+function scale(a, c) {
+  return { x: a.x * c, y: a.y * c };
+}
+
+const view = { xmin: -6, xmax: 6, ymin: -6, ymax: 6, pad: 42 };
+
+function toCanvas(canvas, p) {
+  const w = canvas.width - 2 * view.pad;
+  const h = canvas.height - 2 * view.pad;
+  return {
+    x: view.pad + (p.x - view.xmin) / (view.xmax - view.xmin) * w,
+    y: view.pad + (view.ymax - p.y) / (view.ymax - view.ymin) * h
+  };
+}
+
+function fromCanvas(canvas, x, y) {
+  const w = canvas.width - 2 * view.pad;
+  const h = canvas.height - 2 * view.pad;
+  return {
+    x: view.xmin + (x - view.pad) / w * (view.xmax - view.xmin),
+    y: view.ymax - (y - view.pad) / h * (view.ymax - view.ymin)
+  };
+}
+
+function clampPoint(p) {
+  return {
+    x: Math.round(Math.max(view.xmin, Math.min(view.xmax, p.x)) * 4) / 4,
+    y: Math.round(Math.max(view.ymin, Math.min(view.ymax, p.y)) * 4) / 4
+  };
+}
+
+function drawGrid(ctx, canvas) {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = "#fbfdff";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  ctx.strokeStyle = "#e7eef8";
+  ctx.lineWidth = 1;
+
+  for (let x = view.xmin; x <= view.xmax; x++) {
+    const a = toCanvas(canvas, { x, y: view.ymin });
+    const b = toCanvas(canvas, { x, y: view.ymax });
+    ctx.beginPath();
+    ctx.moveTo(a.x, a.y);
+    ctx.lineTo(b.x, b.y);
+    ctx.stroke();
+  }
+
+  for (let y = view.ymin; y <= view.ymax; y++) {
+    const a = toCanvas(canvas, { x: view.xmin, y });
+    const b = toCanvas(canvas, { x: view.xmax, y });
+    ctx.beginPath();
+    ctx.moveTo(a.x, a.y);
+    ctx.lineTo(b.x, b.y);
+    ctx.stroke();
+  }
+
+  const xA = toCanvas(canvas, { x: view.xmin, y: 0 });
+  const xB = toCanvas(canvas, { x: view.xmax, y: 0 });
+  const yA = toCanvas(canvas, { x: 0, y: view.ymin });
+  const yB = toCanvas(canvas, { x: 0, y: view.ymax });
+
+  ctx.strokeStyle = "#111";
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(xA.x, xA.y);
+  ctx.lineTo(xB.x, xB.y);
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.moveTo(yA.x, yA.y);
+  ctx.lineTo(yB.x, yB.y);
+  ctx.stroke();
+
+  // flechas positivas
+  const ah = 10;
+  ctx.fillStyle = "#111";
+  ctx.beginPath();
+  ctx.moveTo(xB.x, xB.y);
+  ctx.lineTo(xB.x - ah, xB.y - 4);
+  ctx.lineTo(xB.x - ah, xB.y + 4);
+  ctx.closePath();
+  ctx.fill();
+
+  ctx.beginPath();
+  ctx.moveTo(yB.x, yB.y);
+  ctx.lineTo(yB.x - 4, yB.y + ah);
+  ctx.lineTo(yB.x + 4, yB.y + ah);
+  ctx.closePath();
+  ctx.fill();
+
+  ctx.font = "16px Georgia";
+  ctx.fillText("x", xB.x + 8, xB.y - 8);
+  ctx.fillText("y", yB.x + 8, yB.y - 10);
+  const O = toCanvas(canvas, { x: 0, y: 0 });
+  ctx.fillText("0", O.x + 6, O.y + 16);
+}
+
+function drawArrow(ctx, canvas, start, end, color = "#111", width = 3, label = "") {
+  const a = toCanvas(canvas, start);
+  const b = toCanvas(canvas, end);
+  const ang = Math.atan2(b.y - a.y, b.x - a.x);
+
+  ctx.strokeStyle = color;
+  ctx.fillStyle = color;
+  ctx.lineWidth = width;
+  ctx.beginPath();
+  ctx.moveTo(a.x, a.y);
+  ctx.lineTo(b.x, b.y);
+  ctx.stroke();
+
+  const head = 13;
+  ctx.beginPath();
+  ctx.moveTo(b.x, b.y);
+  ctx.lineTo(b.x - head * Math.cos(ang - Math.PI / 7), b.y - head * Math.sin(ang - Math.PI / 7));
+  ctx.lineTo(b.x - head * Math.cos(ang + Math.PI / 7), b.y - head * Math.sin(ang + Math.PI / 7));
+  ctx.closePath();
+  ctx.fill();
+
+  if (label) {
+    ctx.font = "bold 18px Georgia";
+    ctx.fillText(label, (a.x + b.x) / 2 + 8, (a.y + b.y) / 2 - 8);
+  }
+}
+
+function drawHandle(ctx, canvas, p, color = "#111") {
+  const c = toCanvas(canvas, p);
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.arc(c.x, c.y, 8, 0, Math.PI * 2);
+  ctx.fill();
+}
+
+function drawDashedComponents(ctx, canvas, p) {
+  const P = toCanvas(canvas, p);
+  const Px = toCanvas(canvas, { x: p.x, y: 0 });
+  const Py = toCanvas(canvas, { x: 0, y: p.y });
+
+  ctx.strokeStyle = "#777";
+  ctx.lineWidth = 1.5;
+  ctx.setLineDash([7, 5]);
+
+  ctx.beginPath();
+  ctx.moveTo(P.x, P.y);
+  ctx.lineTo(Px.x, Px.y);
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.moveTo(P.x, P.y);
+  ctx.lineTo(Py.x, Py.y);
+  ctx.stroke();
+
+  ctx.setLineDash([]);
+  ctx.fillStyle = "#111";
+  ctx.font = "15px Georgia";
+  ctx.fillText("u₁", Px.x - 8, Px.y + 22);
+  ctx.fillText("u₂", Py.x - 38, Py.y + 5);
+}
+
+function drawVectorGraph() {
+  const canvas = $("graphVector");
+  const ctx = canvas.getContext("2d");
+  const u = state.g1.u;
+  drawGrid(ctx, canvas);
+  drawDashedComponents(ctx, canvas, u);
+  drawArrow(ctx, canvas, { x: 0, y: 0 }, u, "#111", 4, "𝐮");
+  drawHandle(ctx, canvas, u, "#111");
+
+  $("g1u1").textContent = fmt(u.x);
+  $("g1u2").textContent = fmt(u.y);
+  $("g1norm").textContent = fmt(norm(u));
+}
+
+function drawSumGraph() {
+  const canvas = $("graphSum");
+  const ctx = canvas.getContext("2d");
+  const u = state.g2.u;
+  const v = state.g2.v;
+  const w = add(u, v);
+
+  drawGrid(ctx, canvas);
+
+  const U = toCanvas(canvas, u);
+  const V = toCanvas(canvas, v);
+  const W = toCanvas(canvas, w);
+
+  ctx.strokeStyle = "#94a3b8";
+  ctx.lineWidth = 2;
+  ctx.setLineDash([8, 5]);
+  ctx.beginPath();
+  ctx.moveTo(U.x, U.y);
+  ctx.lineTo(W.x, W.y);
+  ctx.lineTo(V.x, V.y);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  drawArrow(ctx, canvas, { x: 0, y: 0 }, u, "#111", 3, "𝐮");
+  drawArrow(ctx, canvas, { x: 0, y: 0 }, v, "#334155", 3, "𝐯");
+  drawArrow(ctx, canvas, { x: 0, y: 0 }, w, "#0b5cad", 4, "𝐰 = 𝐮 + 𝐯");
+
+  // vectores trasladados
+  drawArrow(ctx, canvas, u, w, "#777", 2, "");
+  drawArrow(ctx, canvas, v, w, "#777", 2, "");
+
+  drawHandle(ctx, canvas, u, "#111");
+  drawHandle(ctx, canvas, v, "#334155");
+
+  $("g2u1").textContent = fmt(u.x);
+  $("g2u2").textContent = fmt(u.y);
+  $("g2v1").textContent = fmt(v.x);
+  $("g2v2").textContent = fmt(v.y);
+  $("g2w1").textContent = fmt(w.x);
+  $("g2w2").textContent = fmt(w.y);
+}
+
+function drawScalarGraph() {
+  const canvas = $("graphScalar");
+  const ctx = canvas.getContext("2d");
+  const u = state.g3.u;
+  const cu = scale(u, state.g3.c);
+
+  drawGrid(ctx, canvas);
+  drawArrow(ctx, canvas, { x: 0, y: 0 }, u, "#111", 3, "𝐮");
+  drawArrow(ctx, canvas, { x: 0, y: 0 }, cu, "#0f766e", 4, "c𝐮");
+  drawHandle(ctx, canvas, u, "#111");
+
+  $("scalarValue").textContent = fmt(state.g3.c);
+  $("g3cu1").textContent = fmt(cu.x);
+  $("g3cu2").textContent = fmt(cu.y);
+}
+
+function redrawAll() {
+  drawVectorGraph();
+  drawSumGraph();
+  drawScalarGraph();
+}
+
+function pointerPosition(ev, canvas) {
+  const rect = canvas.getBoundingClientRect();
+  return {
+    x: (ev.clientX - rect.left) * canvas.width / rect.width,
+    y: (ev.clientY - rect.top) * canvas.height / rect.height
+  };
+}
+
+function nearPoint(canvas, pointer, p) {
+  const q = toCanvas(canvas, p);
+  return Math.hypot(pointer.x - q.x, pointer.y - q.y) < 20;
+}
+
+function setupDragging() {
+  const graphVector = $("graphVector");
+  graphVector.addEventListener("pointerdown", (ev) => {
+    const p = pointerPosition(ev, graphVector);
+    if (nearPoint(graphVector, p, state.g1.u)) state.g1.drag = "u";
+  });
+  graphVector.addEventListener("pointermove", (ev) => {
+    if (!state.g1.drag) return;
+    const p = pointerPosition(ev, graphVector);
+    state.g1.u = clampPoint(fromCanvas(graphVector, p.x, p.y));
+    drawVectorGraph();
+  });
+
+  const graphSum = $("graphSum");
+  graphSum.addEventListener("pointerdown", (ev) => {
+    const p = pointerPosition(ev, graphSum);
+    if (nearPoint(graphSum, p, state.g2.u)) state.g2.drag = "u";
+    else if (nearPoint(graphSum, p, state.g2.v)) state.g2.drag = "v";
+  });
+  graphSum.addEventListener("pointermove", (ev) => {
+    if (!state.g2.drag) return;
+    const p = pointerPosition(ev, graphSum);
+    const val = clampPoint(fromCanvas(graphSum, p.x, p.y));
+    if (state.g2.drag === "u") state.g2.u = val;
+    if (state.g2.drag === "v") state.g2.v = val;
+    drawSumGraph();
+  });
+
+  const graphScalar = $("graphScalar");
+  graphScalar.addEventListener("pointerdown", (ev) => {
+    const p = pointerPosition(ev, graphScalar);
+    if (nearPoint(graphScalar, p, state.g3.u)) state.g3.drag = "u";
+  });
+  graphScalar.addEventListener("pointermove", (ev) => {
+    if (!state.g3.drag) return;
+    const p = pointerPosition(ev, graphScalar);
+    state.g3.u = clampPoint(fromCanvas(graphScalar, p.x, p.y));
+    drawScalarGraph();
+  });
+
+  window.addEventListener("pointerup", () => {
+    state.g1.drag = null;
+    state.g2.drag = null;
+    state.g3.drag = null;
+  });
+
+  $("scalarSlider").addEventListener("input", (ev) => {
+    state.g3.c = Number(ev.target.value);
+    drawScalarGraph();
+  });
+}
+
+function setupNavigation() {
+  document.querySelectorAll(".section-tab").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".section-tab").forEach(b => b.classList.remove("active"));
+      document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
+      btn.classList.add("active");
+      $(btn.dataset.section).classList.add("active");
+      setTimeout(redrawAll, 60);
+    });
+  });
+
+  document.querySelectorAll(".inner-tab").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const section = btn.closest(".section");
+      section.querySelectorAll(".inner-tab").forEach(b => b.classList.remove("active"));
+      section.querySelectorAll(".panel").forEach(p => p.classList.remove("active"));
+      btn.classList.add("active");
+      $(btn.dataset.panel).classList.add("active");
+      setTimeout(redrawAll, 60);
+    });
+  });
+}
+
+function setupActivities() {
+  document.querySelectorAll(".activity-card").forEach(card => {
+    const input = card.querySelector("input");
+    const feedback = card.querySelector(".feedback");
+    const solution = card.querySelector(".solution");
+    const answer = card.dataset.answer.toLowerCase().replace(/\s/g, "");
+
+    card.querySelector(".check-btn").addEventListener("click", () => {
+      const user = input.value.toLowerCase().replace(/\s/g, "");
+      if (user === answer) {
+        feedback.textContent = "Correcto.";
+        feedback.style.color = "var(--green)";
+      } else {
+        feedback.textContent = "Revisar. Pedí una pista o mirá la resolución si lo necesitás.";
+        feedback.style.color = "var(--red)";
+      }
+    });
+
+    card.querySelector(".hint-btn").addEventListener("click", () => {
+      feedback.textContent = "Pista: revisá la definición o aplicá la fórmula componente a componente.";
+      feedback.style.color = "var(--orange)";
+    });
+
+    card.querySelector(".solution-btn").addEventListener("click", () => {
+      solution.classList.toggle("visible");
+    });
+  });
+}
+
+function setupQuiz() {
+  document.querySelectorAll(".quiz-card").forEach(card => {
+    const correct = Number(card.dataset.correct);
+    const buttons = [...card.querySelectorAll("button")];
+    const feedback = card.querySelector(".quiz-feedback");
+
+    buttons.forEach((btn, index) => {
+      btn.addEventListener("click", () => {
+        buttons.forEach((b, i) => {
+          b.disabled = true;
+          if (i === correct) b.classList.add("correct");
+          if (i === index && i !== correct) b.classList.add("wrong");
+        });
+
+        if (index === correct) {
+          feedback.textContent = "Correcto.";
+          feedback.style.color = "var(--green)";
+        } else {
+          feedback.textContent = "Revisar el concepto.";
+          feedback.style.color = "var(--red)";
+        }
+      });
+    });
+  });
+}
+
+function init() {
+  setupNavigation();
+  setupDragging();
+  setupActivities();
+  setupQuiz();
+  redrawAll();
+}
+
+init();

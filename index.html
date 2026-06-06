@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VectorLab · Unidad 1: Vectores</title>
+  <meta name="description" content="Manual interactivo de vectores para Álgebra y Geometría Analítica." />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="hero">
+    <div>
+      <p class="eyebrow">UNSL · FICA · Álgebra y Geometría Analítica</p>
+      <h1>VectorLab</h1>
+      <p class="subtitle">Unidad 1: Vectores · Manual interactivo + actividades + autoevaluación</p>
+    </div>
+    <div class="status-card">
+      <span>Versión</span>
+      <strong>Nueva Base V1</strong>
+      <small>Sección 1 visual</small>
+    </div>
+  </header>
+
+  <main>
+    <section class="intro">
+      <div>
+        <h2>Recorrido de la unidad</h2>
+        <p>
+          Esta app acompaña el estudio de vectores integrando teoría, gráficas interactivas,
+          actividades guiadas y autoevaluación.
+        </p>
+      </div>
+      <div class="notation-box">
+        <strong>Convención:</strong>
+        los vectores se escriben como <span class="vec">𝐮</span>, <span class="vec">𝐯</span>, <span class="vec">𝐰</span>;
+        las componentes como <span class="comp">u₁</span>, <span class="comp">u₂</span>, <span class="comp">v₁</span>, <span class="comp">v₂</span>.
+      </div>
+    </section>
+
+    <nav class="section-tabs" aria-label="Secciones de la unidad">
+      <button class="section-tab active" data-section="sec1">1. Definición y operaciones</button>
+      <button class="section-tab" data-section="sec2">2. Producto escalar</button>
+      <button class="section-tab" data-section="sec3">3. Producto vectorial</button>
+      <button class="section-tab" data-section="sec4">4. Producto mixto</button>
+    </nav>
+
+    <!-- SECCIÓN 1 -->
+    <section id="sec1" class="section active">
+      <div class="section-header">
+        <div>
+          <h2>1. Definición y operaciones con vectores</h2>
+          <p>Vector, componentes, módulo, suma, producto por escalar y descomposición canónica.</p>
+        </div>
+        <span class="badge">Primera sección desarrollada</span>
+      </div>
+
+      <nav class="inner-tabs">
+        <button class="inner-tab active" data-panel="s1-theory">Teoría</button>
+        <button class="inner-tab" data-panel="s1-activities">Actividades</button>
+        <button class="inner-tab" data-panel="s1-quiz">Autoevaluación</button>
+      </nav>
+
+      <article id="s1-theory" class="panel active">
+        <div class="theory-grid">
+          <div class="theory-card">
+            <h3>Vector</h3>
+            <p>
+              Un vector puede representarse como un segmento orientado. Queda determinado por
+              <strong>módulo</strong>, <strong>dirección</strong> y <strong>sentido</strong>.
+            </p>
+            <p>
+              En el plano, si el vector parte del origen y llega al punto <span class="math">(u₁,u₂)</span>,
+              se escribe:
+            </p>
+            <div class="formula">𝐮 = (u₁, u₂)</div>
+            <div class="formula">‖𝐮‖ = √(u₁² + u₂²)</div>
+          </div>
+
+          <div class="theory-card">
+            <h3>Suma de vectores</h3>
+            <p>
+              La suma de vectores puede interpretarse geométricamente mediante la regla del triángulo
+              o la regla del paralelogramo.
+            </p>
+            <div class="formula">𝐰 = 𝐮 + 𝐯</div>
+            <div class="formula">𝐮 + 𝐯 = (u₁ + v₁, u₂ + v₂)</div>
+          </div>
+
+          <div class="theory-card">
+            <h3>Producto por escalar</h3>
+            <p>
+              Si <span class="math">c</span> es un escalar, entonces <span class="math">c𝐮</span>
+              es un vector en la misma dirección de <span class="math">𝐮</span>.
+            </p>
+            <ul>
+              <li>Si <span class="math">c &gt; 0</span>, conserva el sentido.</li>
+              <li>Si <span class="math">c &lt; 0</span>, invierte el sentido.</li>
+              <li>Si <span class="math">c = 0</span>, se obtiene el vector nulo.</li>
+            </ul>
+            <div class="formula">c𝐮 = (cu₁, cu₂)</div>
+            <div class="formula">‖c𝐮‖ = |c| ‖𝐮‖</div>
+          </div>
+
+          <div class="theory-card">
+            <h3>Descomposición canónica</h3>
+            <p>
+              En el espacio, usando los versores <span class="vec">𝐢</span>, <span class="vec">𝐣</span> y <span class="vec">𝐤</span>,
+              todo vector puede escribirse como:
+            </p>
+            <div class="formula">𝐮 = (u₁,u₂,u₃) = u₁𝐢 + u₂𝐣 + u₃𝐤</div>
+          </div>
+        </div>
+
+        <div class="graph-stack">
+          <h3>Gráficas interactivas de la sección</h3>
+          <p class="muted">Arrastrá los extremos de los vectores o mové el deslizador para explorar.</p>
+
+          <div class="graph-card">
+            <div class="graph-header">
+              <div>
+                <h4>Gráfica 1 · Vector en el plano</h4>
+                <p>Permite leer componentes y módulo de <span class="vec">𝐮</span>.</p>
+              </div>
+              <div class="live-values">
+                <span>𝐮 = (<b id="g1u1">4</b>, <b id="g1u2">2</b>)</span>
+                <span>‖𝐮‖ = <b id="g1norm">4.47</b></span>
+              </div>
+            </div>
+            <canvas id="graphVector" width="880" height="520"></canvas>
+          </div>
+
+          <div class="graph-card">
+            <div class="graph-header">
+              <div>
+                <h4>Gráfica 2 · Suma de vectores</h4>
+                <p>Visualiza <span class="math">𝐰 = 𝐮 + 𝐯</span> mediante paralelogramo.</p>
+              </div>
+              <div class="live-values">
+                <span>𝐮 = (<b id="g2u1">3</b>, <b id="g2u2">1</b>)</span>
+                <span>𝐯 = (<b id="g2v1">2</b>, <b id="g2v2">3</b>)</span>
+                <span>𝐰 = (<b id="g2w1">5</b>, <b id="g2w2">4</b>)</span>
+              </div>
+            </div>
+            <canvas id="graphSum" width="880" height="520"></canvas>
+          </div>
+
+          <div class="graph-card">
+            <div class="graph-header">
+              <div>
+                <h4>Gráfica 3 · Producto por escalar</h4>
+                <p>Explora cómo cambia <span class="math">c𝐮</span> cuando cambia el escalar <span class="math">c</span>.</p>
+              </div>
+              <div class="live-values">
+                <span>c = <b id="scalarValue">1.50</b></span>
+                <span>c𝐮 = (<b id="g3cu1">6</b>, <b id="g3cu2">3</b>)</span>
+              </div>
+            </div>
+            <label class="slider-label">
+              Escalar c
+              <input id="scalarSlider" type="range" min="-3" max="3" step="0.25" value="1.5">
+            </label>
+            <canvas id="graphScalar" width="880" height="520"></canvas>
+          </div>
+        </div>
+      </article>
+
+      <article id="s1-activities" class="panel">
+        <div class="section-note">
+          <h3>Actividades guiadas</h3>
+          <p>
+            En la próxima etapa cargaremos 10 actividades. Por ahora dejamos visible la estructura y tres actividades modelo.
+          </p>
+        </div>
+
+        <div class="activity-list">
+          <div class="activity-card" data-answer="vectorial">
+            <h4>Actividad modelo 1</h4>
+            <p>Clasificá la magnitud <strong>fuerza</strong>: ¿es escalar o vectorial?</p>
+            <input type="text" placeholder="Responder: escalar o vectorial">
+            <div class="buttons">
+              <button class="check-btn">Verificar</button>
+              <button class="hint-btn">Pista</button>
+              <button class="solution-btn">Ver resolución</button>
+            </div>
+            <p class="feedback"></p>
+            <div class="solution">La fuerza es vectorial porque requiere módulo, dirección y sentido.</div>
+          </div>
+
+          <div class="activity-card" data-answer="5">
+            <h4>Actividad modelo 2</h4>
+            <p>Calculá el módulo de <span class="math">𝐮 = (3,4)</span>.</p>
+            <input type="text" placeholder="Ej.: 5">
+            <div class="buttons">
+              <button class="check-btn">Verificar</button>
+              <button class="hint-btn">Pista</button>
+              <button class="solution-btn">Ver resolución</button>
+            </div>
+            <p class="feedback"></p>
+            <div class="solution">‖𝐮‖ = √(3²+4²) = √25 = 5.</div>
+          </div>
+
+          <div class="activity-card" data-answer="(5,-3,4)">
+            <h4>Actividad modelo 3</h4>
+            <p>Sean <span class="math">𝐮=(2,-1,0)</span> y <span class="math">𝐯=(3,-2,4)</span>. Calculá <span class="math">𝐮+𝐯</span>.</p>
+            <input type="text" placeholder="Ej.: (5,-3,4)">
+            <div class="buttons">
+              <button class="check-btn">Verificar</button>
+              <button class="hint-btn">Pista</button>
+              <button class="solution-btn">Ver resolución</button>
+            </div>
+            <p class="feedback"></p>
+            <div class="solution">𝐮+𝐯=(2+3,-1+(-2),0+4)=(5,-3,4).</div>
+          </div>
+        </div>
+      </article>
+
+      <article id="s1-quiz" class="panel">
+        <div class="section-note">
+          <h3>Autoevaluación</h3>
+          <p>
+            En la próxima etapa se completarán 10 preguntas. Por ahora dejamos tres preguntas de muestra.
+          </p>
+        </div>
+
+        <div class="quiz-grid">
+          <div class="quiz-card" data-correct="0">
+            <h4>1. ¿Qué elementos definen un vector?</h4>
+            <button>Módulo, dirección y sentido</button>
+            <button>Solo módulo</button>
+            <button>Solo dirección</button>
+            <p class="quiz-feedback"></p>
+          </div>
+
+          <div class="quiz-card" data-correct="1">
+            <h4>2. Si c &lt; 0, entonces c𝐮...</h4>
+            <button>Conserva dirección y sentido</button>
+            <button>Conserva dirección e invierte sentido</button>
+            <button>Siempre vale cero</button>
+            <p class="quiz-feedback"></p>
+          </div>
+
+          <div class="quiz-card" data-correct="0">
+            <h4>3. Si 𝐮=(2,3) y 𝐯=(1,4), entonces 𝐮+𝐯 es:</h4>
+            <button>(3,7)</button>
+            <button>(2,12)</button>
+            <button>(1,1)</button>
+            <p class="quiz-feedback"></p>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <!-- SECCIÓN 2 -->
+    <section id="sec2" class="section">
+      <div class="section-header">
+        <div>
+          <h2>2. Producto escalar</h2>
+          <p>Definición geométrica, componentes, ortogonalidad, ángulo y proyección.</p>
+        </div>
+        <span class="badge pending">Próxima etapa</span>
+      </div>
+      <div class="placeholder">
+        <h3>Sección preparada</h3>
+        <p>En la siguiente versión agregaremos teoría, 10 actividades, 10 preguntas y gráficas de producto escalar y proyección.</p>
+      </div>
+    </section>
+
+    <!-- SECCIÓN 3 -->
+    <section id="sec3" class="section">
+      <div class="section-header">
+        <div>
+          <h2>3. Producto vectorial</h2>
+          <p>Vector perpendicular, regla de la mano derecha, área y aplicaciones.</p>
+        </div>
+        <span class="badge pending">Próxima etapa</span>
+      </div>
+      <div class="placeholder">
+        <h3>Sección preparada</h3>
+        <p>En una versión posterior agregaremos producto vectorial en 3D, área del paralelogramo y distancia punto-recta.</p>
+      </div>
+    </section>
+
+    <!-- SECCIÓN 4 -->
+    <section id="sec4" class="section">
+      <div class="section-header">
+        <div>
+          <h2>4. Producto mixto</h2>
+          <p>Volumen, coplanaridad, determinante y regla cíclica.</p>
+        </div>
+        <span class="badge pending">Próxima etapa</span>
+      </div>
+      <div class="placeholder">
+        <h3>Sección preparada</h3>
+        <p>En una versión posterior agregaremos volumen del paralelepípedo, coplanaridad y producto mixto.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <span>VectorLab · Nueva Base V1</span>
+    <span>Diseño estable · Sin conversión automática de notación</span>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
