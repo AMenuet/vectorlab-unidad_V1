@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>VectorLab · Unidad 1: Vectores</title>
   <meta name="description" content="Manual interactivo de vectores para Álgebra y Geometría Analítica." />
-  <link rel="stylesheet" href="styles.css?v=3_3" />
+  <link rel="stylesheet" href="styles.css?v=4" />
 </head>
 <body>
   <header class="hero">
@@ -657,14 +657,284 @@
       <div class="section-header">
         <div>
           <h2>3. Producto vectorial</h2>
-          <p>Vector perpendicular, regla de la mano derecha, área y aplicaciones.</p>
+          <p>Vector perpendicular, regla de la mano derecha, cálculo por determinante, área y aplicaciones.</p>
         </div>
-        <span class="badge pending">Próxima etapa</span>
+        <span class="badge">Sección desarrollada</span>
       </div>
-      <div class="placeholder">
-        <h3>Sección preparada</h3>
-        <p>En una versión posterior agregaremos producto vectorial en 3D, área del paralelogramo y distancia punto-recta.</p>
-      </div>
+
+      <nav class="inner-tabs">
+        <button class="inner-tab active" data-panel="s3-theory">Teoría</button>
+        <button class="inner-tab" data-panel="s3-activities">Actividades</button>
+        <button class="inner-tab" data-panel="s3-quiz">Autoevaluación</button>
+      </nav>
+
+      <article id="s3-theory" class="panel active">
+        <div class="theory-grid">
+          <div class="theory-card">
+            <h3>Definición geométrica</h3>
+            <p>
+              El producto vectorial entre dos vectores de ℝ³ da como resultado otro vector.
+              Si 𝐰 = 𝐮 × 𝐯, entonces 𝐰 es perpendicular al plano determinado por 𝐮 y 𝐯.
+            </p>
+            <div class="formula">𝐰 = 𝐮 × 𝐯</div>
+            <div class="formula">‖𝐮 × 𝐯‖ = ‖𝐮‖ ‖𝐯‖ sen(θ)</div>
+          </div>
+
+          <div class="theory-card">
+            <h3>Dirección y sentido</h3>
+            <p>
+              La dirección de 𝐮 × 𝐯 es perpendicular a 𝐮 y a 𝐯. El sentido se determina con la
+              regla de la mano derecha o regla del sacacorchos.
+            </p>
+            <p>
+              Si se invierte el orden, cambia el sentido:
+            </p>
+            <div class="formula">𝐮 × 𝐯 = −(𝐯 × 𝐮)</div>
+          </div>
+
+          <div class="theory-card">
+            <h3>Cálculo por componentes</h3>
+            <p>Si 𝐮=(u₁,u₂,u₃) y 𝐯=(v₁,v₂,v₃), entonces:</p>
+            <div class="formula">𝐮 × 𝐯 = (u₂v₃−u₃v₂, u₃v₁−u₁v₃, u₁v₂−u₂v₁)</div>
+            <p>También puede calcularse mediante el determinante simbólico con 𝐢, 𝐣 y 𝐤.</p>
+          </div>
+
+          <div class="theory-card">
+            <h3>Área y aplicaciones</h3>
+            <p>
+              El módulo del producto vectorial representa el área del paralelogramo generado por 𝐮 y 𝐯.
+            </p>
+            <div class="formula">A = ‖𝐮 × 𝐯‖</div>
+            <p>
+              También se utiliza para calcular momentos de fuerzas y distancias geométricas.
+            </p>
+            <div class="formula">𝐌 = 𝐫 × 𝐅</div>
+          </div>
+        </div>
+
+        <div class="graph-stack">
+          <h3>Gráficas interactivas de producto vectorial</h3>
+          <p class="muted">Explorá la perpendicularidad, el cambio de sentido y el área generada por dos vectores.</p>
+
+          <div class="graph-card">
+            <div class="graph-header">
+              <div>
+                <h4>Gráfica 6 · Producto vectorial en 3D</h4>
+                <p>Visualiza 𝐰 = 𝐮 × 𝐯 como vector perpendicular al plano.</p>
+              </div>
+              <div class="live-values">
+                <span>Orden: <b id="crossOrderLabel">𝐮 × 𝐯</b></span>
+                <span>Sentido de 𝐰: <b id="crossSenseLabel">positivo</b></span>
+              </div>
+            </div>
+
+            <div class="cross-controls">
+              <button id="btnUxV" class="mini-btn active">Mostrar 𝐮 × 𝐯</button>
+              <button id="btnVxU" class="mini-btn">Mostrar 𝐯 × 𝐮</button>
+              <button id="btnTogglePlane" class="mini-btn">Mostrar/ocultar plano</button>
+            </div>
+
+            <svg id="crossSvg" viewBox="0 0 760 430" class="svg-visual" role="img" aria-label="Producto vectorial">
+              <defs>
+                <marker id="arrBlackS3" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto">
+                  <path d="M0,0 L0,6 L8,3 z" fill="#111"></path>
+                </marker>
+                <marker id="arrBlueS3" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto">
+                  <path d="M0,0 L0,6 L8,3 z" fill="#0b5cad"></path>
+                </marker>
+                <marker id="arrRedS3" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto">
+                  <path d="M0,0 L0,6 L8,3 z" fill="#b91c1c"></path>
+                </marker>
+              </defs>
+              <polygon id="crossPlane" points="110,315 570,285 655,130 195,160" fill="#e5e7eb" stroke="#64748b" stroke-width="2"/>
+              <circle cx="220" cy="288" r="7" fill="#111"/>
+              <line x1="220" y1="288" x2="560" y2="268" stroke="#111" stroke-width="4" marker-end="url(#arrBlackS3)"/>
+              <line x1="220" y1="288" x2="350" y2="162" stroke="#334155" stroke-width="4" marker-end="url(#arrBlackS3)"/>
+              <line id="crossNormal" x1="220" y1="288" x2="220" y2="78" stroke="#0b5cad" stroke-width="5" marker-end="url(#arrBlueS3)"/>
+              <path d="M 292 284 A 74 74 0 0 0 272 235" fill="none" stroke="#111" stroke-width="2.5"/>
+              <text x="520" y="302" class="svg-label">𝐮</text>
+              <text x="360" y="162" class="svg-label">𝐯</text>
+              <text id="crossWLabel" x="245" y="98" class="svg-label blue">𝐰 = 𝐮 × 𝐯</text>
+              <text x="284" y="250" class="svg-small">θ</text>
+            </svg>
+          </div>
+
+          <div class="graph-card">
+            <div class="graph-header">
+              <div>
+                <h4>Gráfica 7 · Área del paralelogramo</h4>
+                <p>Muestra que A = ‖𝐮 × 𝐯‖. Mové 𝐮 y 𝐯 para cambiar el área.</p>
+              </div>
+              <div class="live-values">
+                <span>𝐮 = (<b id="g7u1">4</b>, <b id="g7u2">1</b>, 0)</span>
+                <span>𝐯 = (<b id="g7v1">2</b>, <b id="g7v2">3</b>, 0)</span>
+                <span>𝐮 × 𝐯 = (0,0,<b id="g7cross">10</b>)</span>
+                <span>Área = <b id="g7area">10</b></span>
+              </div>
+            </div>
+            <canvas id="graphArea" width="720" height="720"></canvas>
+          </div>
+        </div>
+      </article>
+
+      <article id="s3-activities" class="panel">
+        <div class="section-note">
+          <h3>Actividades guiadas</h3>
+          <p>Resolvé las actividades. Los campos indican el formato esperado, no la respuesta.</p>
+        </div>
+
+        <div class="activity-list">
+          <div class="activity-card" data-answer="vector">
+            <h4>Actividad 1 · Tipo de resultado</h4>
+            <p>El producto 𝐮×𝐯 da como resultado un escalar o un vector?</p>
+            <input type="text" placeholder="escalar / vector">
+            <div class="buttons"><button class="check-btn">Verificar</button><button class="hint-btn">Pista</button><button class="solution-btn">Ver resolución</button></div>
+            <p class="feedback"></p>
+            <div class="solution">El producto vectorial da como resultado un vector.</div>
+          </div>
+
+          <div class="activity-card" data-answer="perpendicular">
+            <h4>Actividad 2 · Dirección</h4>
+            <p>La dirección de 𝐮×𝐯 es paralela o perpendicular al plano determinado por 𝐮 y 𝐯?</p>
+            <input type="text" placeholder="paralela / perpendicular">
+            <div class="buttons"><button class="check-btn">Verificar</button><button class="hint-btn">Pista</button><button class="solution-btn">Ver resolución</button></div>
+            <p class="feedback"></p>
+            <div class="solution">𝐮×𝐯 es perpendicular al plano determinado por 𝐮 y 𝐯.</div>
+          </div>
+
+          <div class="activity-card" data-answer="manoderecha|regladelamanoderecha|sacacorchos">
+            <h4>Actividad 3 · Sentido</h4>
+            <p>Qué regla se utiliza para determinar el sentido de 𝐮×𝐯?</p>
+            <input type="text" placeholder="Ingresá el nombre de la regla">
+            <div class="buttons"><button class="check-btn">Verificar</button><button class="hint-btn">Pista</button><button class="solution-btn">Ver resolución</button></div>
+            <p class="feedback"></p>
+            <div class="solution">Se usa la regla de la mano derecha o regla del sacacorchos.</div>
+          </div>
+
+          <div class="activity-card" data-answer="(-43,13,1)">
+            <h4>Actividad 4 · Producto vectorial</h4>
+            <p>Sean 𝐮=(1,3,4) y 𝐯=(2,7,-5). Calculá 𝐮×𝐯.</p>
+            <input type="text" placeholder="Formato: (a,b,c)">
+            <div class="buttons"><button class="check-btn">Verificar</button><button class="hint-btn">Pista</button><button class="solution-btn">Ver resolución</button></div>
+            <p class="feedback"></p>
+            <div class="solution">𝐮×𝐯=(3·(-5)-4·7, 4·2-1·(-5), 1·7-3·2)=(-43,13,1).</div>
+          </div>
+
+          <div class="activity-card" data-answer="0">
+            <h4>Actividad 5 · Ortogonalidad con 𝐮</h4>
+            <p>Con 𝐮=(1,3,4) y 𝐮×𝐯=(-43,13,1), calculá 𝐮·(𝐮×𝐯).</p>
+            <input type="text" placeholder="Ingresá un número">
+            <div class="buttons"><button class="check-btn">Verificar</button><button class="hint-btn">Pista</button><button class="solution-btn">Ver resolución</button></div>
+            <p class="feedback"></p>
+            <div class="solution">𝐮·(𝐮×𝐯)=1·(-43)+3·13+4·1=-43+39+4=0.</div>
+          </div>
+
+          <div class="activity-card" data-answer="0">
+            <h4>Actividad 6 · Ortogonalidad con 𝐯</h4>
+            <p>Con 𝐯=(2,7,-5) y 𝐮×𝐯=(-43,13,1), calculá 𝐯·(𝐮×𝐯).</p>
+            <input type="text" placeholder="Ingresá un número">
+            <div class="buttons"><button class="check-btn">Verificar</button><button class="hint-btn">Pista</button><button class="solution-btn">Ver resolución</button></div>
+            <p class="feedback"></p>
+            <div class="solution">𝐯·(𝐮×𝐯)=2·(-43)+7·13+(-5)·1=-86+91-5=0.</div>
+          </div>
+
+          <div class="activity-card" data-answer="10">
+            <h4>Actividad 7 · Área</h4>
+            <p>Si ‖𝐮×𝐯‖=10, cuál es el área del paralelogramo generado por 𝐮 y 𝐯?</p>
+            <input type="text" placeholder="Ingresá un número">
+            <div class="buttons"><button class="check-btn">Verificar</button><button class="hint-btn">Pista</button><button class="solution-btn">Ver resolución</button></div>
+            <p class="feedback"></p>
+            <div class="solution">El área es A=‖𝐮×𝐯‖=10.</div>
+          </div>
+
+          <div class="activity-card" data-answer="si|sí">
+            <h4>Actividad 8 · Paralelismo</h4>
+            <p>Si 𝐮×𝐯=𝐨, con 𝐮 y 𝐯 no nulos, son paralelos? Respondé sí o no.</p>
+            <input type="text" placeholder="Respondé sí o no">
+            <div class="buttons"><button class="check-btn">Verificar</button><button class="hint-btn">Pista</button><button class="solution-btn">Ver resolución</button></div>
+            <p class="feedback"></p>
+            <div class="solution">Sí. El producto vectorial nulo indica que los vectores son paralelos o alguno es nulo.</div>
+          </div>
+
+          <div class="activity-card" data-answer="(0,0,6)">
+            <h4>Actividad 9 · Momento de una fuerza</h4>
+            <p>Sean 𝐫=(2,0,0) y 𝐅=(0,3,0). Calculá 𝐌=𝐫×𝐅.</p>
+            <input type="text" placeholder="Formato: (a,b,c)">
+            <div class="buttons"><button class="check-btn">Verificar</button><button class="hint-btn">Pista</button><button class="solution-btn">Ver resolución</button></div>
+            <p class="feedback"></p>
+            <div class="solution">𝐌=𝐫×𝐅=(0,0,2·3)=(0,0,6).</div>
+          </div>
+
+          <div class="activity-card" data-answer="sqrt2|raiz2|1.41|1.414">
+            <h4>Actividad 10 · Distancia punto-recta</h4>
+            <p>Si ‖𝐮×𝐯‖=4 y ‖𝐮‖=√8, calculá d=‖𝐮×𝐯‖/‖𝐮‖.</p>
+            <input type="text" placeholder="Ingresá el valor exacto o aproximado">
+            <div class="buttons"><button class="check-btn">Verificar</button><button class="hint-btn">Pista</button><button class="solution-btn">Ver resolución</button></div>
+            <p class="feedback"></p>
+            <div class="solution">d=4/√8=√2≈1.414.</div>
+          </div>
+        </div>
+      </article>
+
+      <article id="s3-quiz" class="panel">
+        <div class="section-note">
+          <h3>Autoevaluación</h3>
+          <p>Respondé las 10 preguntas de producto vectorial.</p>
+        </div>
+
+        <div class="quiz-grid">
+          <div class="quiz-card" data-correct="1">
+            <h4>1. El producto vectorial 𝐮×𝐯 da como resultado:</h4>
+            <button>Un escalar</button><button>Un vector</button><button>Un ángulo</button>
+            <p class="quiz-feedback"></p>
+          </div>
+          <div class="quiz-card" data-correct="0">
+            <h4>2. 𝐮×𝐯 es perpendicular a:</h4>
+            <button>𝐮 y 𝐯</button><button>Solo 𝐮</button><button>Solo 𝐯</button>
+            <p class="quiz-feedback"></p>
+          </div>
+          <div class="quiz-card" data-correct="2">
+            <h4>3. El sentido de 𝐮×𝐯 se determina con:</h4>
+            <button>Regla de Cramer</button><button>Teorema de Pitágoras</button><button>Regla de la mano derecha</button>
+            <p class="quiz-feedback"></p>
+          </div>
+          <div class="quiz-card" data-correct="0">
+            <h4>4. Se cumple que 𝐮×𝐯 es igual a:</h4>
+            <button>−(𝐯×𝐮)</button><button>𝐯×𝐮</button><button>𝐮·𝐯</button>
+            <p class="quiz-feedback"></p>
+          </div>
+          <div class="quiz-card" data-correct="1">
+            <h4>5. El módulo ‖𝐮×𝐯‖ representa:</h4>
+            <button>Volumen</button><button>Área del paralelogramo</button><button>Ángulo</button>
+            <p class="quiz-feedback"></p>
+          </div>
+          <div class="quiz-card" data-correct="2">
+            <h4>6. Si 𝐮 y 𝐯 son paralelos, entonces 𝐮×𝐯:</h4>
+            <button>Es unitario</button><button>Es perpendicular a 𝐤</button><button>Es el vector nulo</button>
+            <p class="quiz-feedback"></p>
+          </div>
+          <div class="quiz-card" data-correct="0">
+            <h4>7. La fórmula del área del paralelogramo es:</h4>
+            <button>A=‖𝐮×𝐯‖</button><button>A=𝐮·𝐯</button><button>A=‖𝐮‖+‖𝐯‖</button>
+            <p class="quiz-feedback"></p>
+          </div>
+          <div class="quiz-card" data-correct="1">
+            <h4>8. En física, 𝐫×𝐅 puede representar:</h4>
+            <button>Temperatura</button><button>Momento de una fuerza</button><button>Masa</button>
+            <p class="quiz-feedback"></p>
+          </div>
+          <div class="quiz-card" data-correct="2">
+            <h4>9. El producto vectorial se trabaja geométricamente en:</h4>
+            <button>ℝ¹</button><button>ℝ² solamente</button><button>ℝ³</button>
+            <p class="quiz-feedback"></p>
+          </div>
+          <div class="quiz-card" data-correct="0">
+            <h4>10. Para distancia punto-recta se puede usar:</h4>
+            <button>d=‖𝐮×𝐯‖/‖𝐮‖</button><button>d=𝐮·𝐯</button><button>d=‖𝐮+𝐯‖</button>
+            <p class="quiz-feedback"></p>
+          </div>
+        </div>
+      </article>
     </section>
 
     <!-- SECCIÓN 4 -->
@@ -688,6 +958,6 @@
     <span>Diseño estable · Sin conversión automática de notación</span>
   </footer>
 
-  <script src="app.js?v=3_3"></script>
+  <script src="app.js?v=4"></script>
 </body>
 </html>

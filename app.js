@@ -3,7 +3,9 @@ const state = {
   g2: { u: { x: 3, y: 1 }, v: { x: 2, y: 3 }, drag: null },
   g3: { u: { x: 4, y: 2 }, c: 1.5, drag: null },
   g4: { u: { x: 4, y: 1 }, v: { x: 2, y: 3 }, drag: null },
-  g5: { u: { x: 4, y: 1 }, v: { x: 2, y: 3 }, drag: null }
+  g5: { u: { x: 4, y: 1 }, v: { x: 2, y: 3 }, drag: null },
+  g7: { u: { x: 4, y: 1 }, v: { x: 2, y: 3 }, drag: null },
+  cross: { order: "uxv", plane: true }
 };
 
 const $ = (id) => document.getElementById(id);
@@ -27,6 +29,10 @@ function scale(a, c) {
 
 function dot(a, b) {
   return a.x * b.x + a.y * b.y;
+}
+
+function cross2D(a, b) {
+  return a.x * b.y - a.y * b.x;
 }
 
 function projection(v, u) {
@@ -402,12 +408,132 @@ function drawProjectionGraph() {
   $("g5comp").textContent = fmt(dot(u, v) / (norm(u) || 1));
 }
 
+function setupCrossSvg() {
+  const btnUxV = $("btnUxV");
+  const btnVxU = $("btnVxU");
+  const btnPlane = $("btnTogglePlane");
+  if (!btnUxV || !btnVxU || !btnPlane) return;
+
+  const update = () => {
+    const normal = $("crossNormal");
+    const label = $("crossWLabel");
+    const orderLabel = $("crossOrderLabel");
+    const senseLabel = $("crossSenseLabel");
+    const plane = $("crossPlane");
+
+    if (state.cross.order === "uxv") {
+      normal.setAttribute("x1", "220");
+      normal.setAttribute("y1", "288");
+      normal.setAttribute("x2", "220");
+      normal.setAttribute("y2", "78");
+      normal.setAttribute("stroke", "#0b5cad");
+      normal.setAttribute("marker-end", "url(#arrBlueS3)");
+      label.textContent = "𝐰 = 𝐮 × 𝐯";
+      label.setAttribute("x", "245");
+      label.setAttribute("y", "98");
+      label.setAttribute("fill", "#0b5cad");
+      orderLabel.textContent = "𝐮 × 𝐯";
+      senseLabel.textContent = "positivo";
+      senseLabel.style.color = "var(--green)";
+      btnUxV.classList.add("active");
+      btnVxU.classList.remove("active");
+    } else {
+      normal.setAttribute("x1", "220");
+      normal.setAttribute("y1", "288");
+      normal.setAttribute("x2", "220");
+      normal.setAttribute("y2", "395");
+      normal.setAttribute("stroke", "#b91c1c");
+      normal.setAttribute("marker-end", "url(#arrRedS3)");
+      label.textContent = "−𝐰 = 𝐯 × 𝐮";
+      label.setAttribute("x", "245");
+      label.setAttribute("y", "390");
+      label.setAttribute("fill", "#b91c1c");
+      orderLabel.textContent = "𝐯 × 𝐮";
+      senseLabel.textContent = "opuesto";
+      senseLabel.style.color = "var(--red)";
+      btnVxU.classList.add("active");
+      btnUxV.classList.remove("active");
+    }
+
+    plane.style.display = state.cross.plane ? "block" : "none";
+  };
+
+  btnUxV.addEventListener("click", () => {
+    state.cross.order = "uxv";
+    update();
+  });
+
+  btnVxU.addEventListener("click", () => {
+    state.cross.order = "vxu";
+    update();
+  });
+
+  btnPlane.addEventListener("click", () => {
+    state.cross.plane = !state.cross.plane;
+    update();
+  });
+
+  update();
+}
+
+function drawAreaGraph() {
+  const canvas = $("graphArea");
+  if (!canvas) return;
+  const ctx = canvas.getContext("2d");
+  const u = state.g7.u;
+  const v = state.g7.v;
+  const z = cross2D(u, v);
+  const area = Math.abs(z);
+  const w = add(u, v);
+
+  drawGrid(ctx, canvas);
+
+  const O = toCanvas(canvas, { x: 0, y: 0 });
+  const U = toCanvas(canvas, u);
+  const V = toCanvas(canvas, v);
+  const W = toCanvas(canvas, w);
+
+  ctx.fillStyle = "rgba(11, 92, 173, 0.12)";
+  ctx.strokeStyle = "#0b5cad";
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(O.x, O.y);
+  ctx.lineTo(U.x, U.y);
+  ctx.lineTo(W.x, W.y);
+  ctx.lineTo(V.x, V.y);
+  ctx.closePath();
+  ctx.fill();
+  ctx.stroke();
+
+  ctx.strokeStyle = "#94a3b8";
+  ctx.setLineDash([8, 5]);
+  ctx.beginPath();
+  ctx.moveTo(U.x, U.y);
+  ctx.lineTo(W.x, W.y);
+  ctx.lineTo(V.x, V.y);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  drawArrow(ctx, canvas, { x: 0, y: 0 }, u, "#111", 3, "𝐮");
+  drawArrow(ctx, canvas, { x: 0, y: 0 }, v, "#334155", 3, "𝐯");
+  drawHandle(ctx, canvas, u, "#111");
+  drawHandle(ctx, canvas, v, "#334155");
+
+  $("g7u1").textContent = fmt(u.x);
+  $("g7u2").textContent = fmt(u.y);
+  $("g7v1").textContent = fmt(v.x);
+  $("g7v2").textContent = fmt(v.y);
+  $("g7cross").textContent = fmt(z);
+  $("g7area").textContent = fmt(area);
+}
+
 function redrawAll() {
   drawVectorGraph();
   drawSumGraph();
   drawScalarGraph();
   drawDotGraph();
   drawProjectionGraph();
+  drawAreaGraph();
 }
 
 function pointerPosition(ev, canvas) {
@@ -491,6 +617,7 @@ function setupDragging() {
     state.g3.drag = null;
     state.g4.drag = null;
     state.g5.drag = null;
+    state.g7.drag = null;
   });
 
   window.addEventListener("pointercancel", (ev) => {
@@ -500,6 +627,7 @@ function setupDragging() {
     state.g3.drag = null;
     state.g4.drag = null;
     state.g5.drag = null;
+    state.g7.drag = null;
   });
 
   $("scalarSlider").addEventListener("input", (ev) => {
@@ -544,6 +672,25 @@ function setupDragging() {
       drawProjectionGraph();
     });
   }
+  const graphArea = $("graphArea");
+  if (graphArea) {
+    graphArea.addEventListener("pointerdown", (ev) => {
+      ev.preventDefault();
+      const p = pointerPosition(ev, graphArea);
+      if (nearPoint(graphArea, p, state.g7.u)) { state.g7.drag = "u"; startCanvasDrag(graphArea, ev); }
+      else if (nearPoint(graphArea, p, state.g7.v)) { state.g7.drag = "v"; startCanvasDrag(graphArea, ev); }
+    });
+    graphArea.addEventListener("pointermove", (ev) => {
+      if (!state.g7.drag) return;
+      ev.preventDefault();
+      const p = pointerPosition(ev, graphArea);
+      const val = clampPoint(fromCanvas(graphArea, p.x, p.y));
+      if (state.g7.drag === "u") state.g7.u = val;
+      if (state.g7.drag === "v") state.g7.v = val;
+      drawAreaGraph();
+    });
+  }
+
 }
 
 function setupNavigation() {
@@ -643,6 +790,7 @@ function init() {
   setupDragging();
   setupActivities();
   setupQuiz();
+  setupCrossSvg();
   redrawAll();
 }
 

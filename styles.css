@@ -487,3 +487,57 @@ canvas {
 canvas.dragging {
   cursor: grabbing;
 }
+
+
+/* V4: producto vectorial */
+.svg-visual {
+  display: block;
+  width: 100%;
+  min-height: 360px;
+  background: #fbfdff;
+  border: 1px solid #e4edf8;
+  border-radius: 16px;
+}
+
+.svg-label {
+  font-family: "Cambria Math", Georgia, serif;
+  font-size: 26px;
+  font-weight: 900;
+  fill: #111;
+}
+
+.svg-label.blue {
+  fill: #0b5cad;
+}
+
+.svg-label.green {
+  fill: #0f766e;
+}
+
+.svg-small {
+  font-family: "Cambria Math", Georgia, serif;
+  font-size: 21px;
+  fill: #111;
+}
+
+.cross-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+  margin-bottom: .75rem;
+}
+
+.mini-btn {
+  border: 0;
+  border-radius: 12px;
+  padding: .65rem .9rem;
+  font-weight: 800;
+  cursor: pointer;
+  background: #e8eef8;
+  color: var(--blue);
+}
+
+.mini-btn.active {
+  background: var(--blue2);
+  color: white;
+}
