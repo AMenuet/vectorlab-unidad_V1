@@ -467,3 +467,11 @@ footer {
     width: 100%;
   }
 }
+
+
+/* V3.2: grillas con escala 1:1 */
+canvas {
+  aspect-ratio: 1 / 1;
+  max-height: 760px;
+  object-fit: contain;
+}

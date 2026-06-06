@@ -44,3 +44,8 @@ Se agregó la Sección 2 completa: teoría de producto escalar, dos gráficas in
 ## Nueva Base V3.1
 
 Se agregó cache busting en los enlaces a `styles.css` y `app.js` para evitar que GitHub Pages o el navegador carguen versiones viejas de los archivos. Esto corrige casos donde la Sección 2 aparece pero sus gráficas no se dibujan.
+
+
+## Nueva Base V3.2
+
+Se corrigió la escala de las gráficas para que las unidades del eje x y del eje y tengan la misma longitud visual. Las grillas ahora quedan cuadradas, evitando deformaciones en ángulos, módulos y proyecciones.
