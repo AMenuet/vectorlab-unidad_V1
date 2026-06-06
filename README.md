@@ -49,3 +49,8 @@ Se agregó cache busting en los enlaces a `styles.css` y `app.js` para evitar qu
 ## Nueva Base V3.2
 
 Se corrigió la escala de las gráficas para que las unidades del eje x y del eje y tengan la misma longitud visual. Las grillas ahora quedan cuadradas, evitando deformaciones en ángulos, módulos y proyecciones.
+
+
+## Nueva Base V3.3
+
+Se corrigió el arrastre de vectores luego del cambio a grillas cuadradas. Se amplió la zona sensible de los puntos, se agregó `touch-action: none` y captura de puntero para mejorar el movimiento con mouse o pantalla táctil.

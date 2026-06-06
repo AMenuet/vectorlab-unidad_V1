@@ -420,17 +420,34 @@ function pointerPosition(ev, canvas) {
 
 function nearPoint(canvas, pointer, p) {
   const q = toCanvas(canvas, p);
-  return Math.hypot(pointer.x - q.x, pointer.y - q.y) < 20;
+  return Math.hypot(pointer.x - q.x, pointer.y - q.y) < 38;
+}
+
+function startCanvasDrag(canvas, ev) {
+  canvas.classList.add("dragging");
+  if (canvas.setPointerCapture) {
+    try { canvas.setPointerCapture(ev.pointerId); } catch (e) {}
+  }
+}
+
+function stopCanvasDrag(canvas, ev) {
+  if (!canvas) return;
+  canvas.classList.remove("dragging");
+  if (canvas.releasePointerCapture && ev) {
+    try { canvas.releasePointerCapture(ev.pointerId); } catch (e) {}
+  }
 }
 
 function setupDragging() {
   const graphVector = $("graphVector");
   graphVector.addEventListener("pointerdown", (ev) => {
+    ev.preventDefault();
     const p = pointerPosition(ev, graphVector);
-    if (nearPoint(graphVector, p, state.g1.u)) state.g1.drag = "u";
+    if (nearPoint(graphVector, p, state.g1.u)) { state.g1.drag = "u"; startCanvasDrag(graphVector, ev); }
   });
   graphVector.addEventListener("pointermove", (ev) => {
     if (!state.g1.drag) return;
+    ev.preventDefault();
     const p = pointerPosition(ev, graphVector);
     state.g1.u = clampPoint(fromCanvas(graphVector, p.x, p.y));
     drawVectorGraph();
@@ -438,12 +455,14 @@ function setupDragging() {
 
   const graphSum = $("graphSum");
   graphSum.addEventListener("pointerdown", (ev) => {
+    ev.preventDefault();
     const p = pointerPosition(ev, graphSum);
-    if (nearPoint(graphSum, p, state.g2.u)) state.g2.drag = "u";
-    else if (nearPoint(graphSum, p, state.g2.v)) state.g2.drag = "v";
+    if (nearPoint(graphSum, p, state.g2.u)) { state.g2.drag = "u"; startCanvasDrag(graphSum, ev); }
+    else if (nearPoint(graphSum, p, state.g2.v)) { state.g2.drag = "v"; startCanvasDrag(graphSum, ev); }
   });
   graphSum.addEventListener("pointermove", (ev) => {
     if (!state.g2.drag) return;
+    ev.preventDefault();
     const p = pointerPosition(ev, graphSum);
     const val = clampPoint(fromCanvas(graphSum, p.x, p.y));
     if (state.g2.drag === "u") state.g2.u = val;
@@ -453,17 +472,29 @@ function setupDragging() {
 
   const graphScalar = $("graphScalar");
   graphScalar.addEventListener("pointerdown", (ev) => {
+    ev.preventDefault();
     const p = pointerPosition(ev, graphScalar);
-    if (nearPoint(graphScalar, p, state.g3.u)) state.g3.drag = "u";
+    if (nearPoint(graphScalar, p, state.g3.u)) { state.g3.drag = "u"; startCanvasDrag(graphScalar, ev); }
   });
   graphScalar.addEventListener("pointermove", (ev) => {
     if (!state.g3.drag) return;
+    ev.preventDefault();
     const p = pointerPosition(ev, graphScalar);
     state.g3.u = clampPoint(fromCanvas(graphScalar, p.x, p.y));
     drawScalarGraph();
   });
 
-  window.addEventListener("pointerup", () => {
+  window.addEventListener("pointerup", (ev) => {
+    document.querySelectorAll("canvas.dragging").forEach(c => stopCanvasDrag(c, ev));
+    state.g1.drag = null;
+    state.g2.drag = null;
+    state.g3.drag = null;
+    state.g4.drag = null;
+    state.g5.drag = null;
+  });
+
+  window.addEventListener("pointercancel", (ev) => {
+    document.querySelectorAll("canvas.dragging").forEach(c => stopCanvasDrag(c, ev));
     state.g1.drag = null;
     state.g2.drag = null;
     state.g3.drag = null;
@@ -479,12 +510,14 @@ function setupDragging() {
   const graphDot = $("graphDot");
   if (graphDot) {
     graphDot.addEventListener("pointerdown", (ev) => {
+      ev.preventDefault();
       const p = pointerPosition(ev, graphDot);
-      if (nearPoint(graphDot, p, state.g4.u)) state.g4.drag = "u";
-      else if (nearPoint(graphDot, p, state.g4.v)) state.g4.drag = "v";
+      if (nearPoint(graphDot, p, state.g4.u)) { state.g4.drag = "u"; startCanvasDrag(graphDot, ev); }
+      else if (nearPoint(graphDot, p, state.g4.v)) { state.g4.drag = "v"; startCanvasDrag(graphDot, ev); }
     });
     graphDot.addEventListener("pointermove", (ev) => {
       if (!state.g4.drag) return;
+      ev.preventDefault();
       const p = pointerPosition(ev, graphDot);
       const val = clampPoint(fromCanvas(graphDot, p.x, p.y));
       if (state.g4.drag === "u") state.g4.u = val;
@@ -496,12 +529,14 @@ function setupDragging() {
   const graphProjection = $("graphProjection");
   if (graphProjection) {
     graphProjection.addEventListener("pointerdown", (ev) => {
+      ev.preventDefault();
       const p = pointerPosition(ev, graphProjection);
-      if (nearPoint(graphProjection, p, state.g5.u)) state.g5.drag = "u";
-      else if (nearPoint(graphProjection, p, state.g5.v)) state.g5.drag = "v";
+      if (nearPoint(graphProjection, p, state.g5.u)) { state.g5.drag = "u"; startCanvasDrag(graphProjection, ev); }
+      else if (nearPoint(graphProjection, p, state.g5.v)) { state.g5.drag = "v"; startCanvasDrag(graphProjection, ev); }
     });
     graphProjection.addEventListener("pointermove", (ev) => {
       if (!state.g5.drag) return;
+      ev.preventDefault();
       const p = pointerPosition(ev, graphProjection);
       const val = clampPoint(fromCanvas(graphProjection, p.x, p.y));
       if (state.g5.drag === "u") state.g5.u = val;

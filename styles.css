@@ -475,3 +475,15 @@ canvas {
   max-height: 760px;
   object-fit: contain;
 }
+
+
+/* V3.3: mejora de arrastre de vectores */
+canvas {
+  touch-action: none;
+  cursor: crosshair;
+  user-select: none;
+}
+
+canvas.dragging {
+  cursor: grabbing;
+}
